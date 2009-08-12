@@ -109,7 +109,12 @@ public class MyProfile extends BasePage {
 		userProfile.setFavouriteQuotes(sakaiPerson.getFavouriteQuotes());
 		userProfile.setOtherInformation(sakaiPerson.getNotes());
 		
-		userProfile.setLocked(sakaiPerson.getLocked());
+		//PRFL-97 workaround. SkaiPerson table needs to be upgraded so locked is not null, but this handles it if not upgraded.
+		if(sakaiPerson.getLocked() == null) {
+			userProfile.setLocked(false);
+		} else {
+			userProfile.setLocked(sakaiPerson.getLocked());
+		}
 	
 		//what type of picture changing method do we use?
 		int profilePictureType = sakaiProxy.getProfilePictureType();
