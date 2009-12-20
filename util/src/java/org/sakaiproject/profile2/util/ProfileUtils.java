@@ -356,6 +356,15 @@ public class ProfileUtils {
 	}
 	
 	/**
+	 * Escape HTML so it can be displayed on screen, will stop evil tags from displaying.
+	 * @param s
+	 * @return
+	 */
+	public static String escapeHtmlForDisplay(String s) {
+		return FormattedText.escapeHtmlFormattedText(s);
+	}
+	
+	/**
 	 * Escapes HTML to the HTML entity equivalents
 	 * @param s
 	 * @return
