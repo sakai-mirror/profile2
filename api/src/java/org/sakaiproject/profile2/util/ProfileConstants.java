@@ -152,6 +152,10 @@ public class ProfileConstants {
 	public static final int FIRST_RECORD = 0;		
 	public static final int MAX_RECORDS = 99;
 	
+	public static final String DEFAULT_PRIVATE_MESSAGE_SUBJECT = "(no subject)";
+	
+	
+	
 	public static final String TOOL_ID = "sakai.profile2";
 		
 	//email constants

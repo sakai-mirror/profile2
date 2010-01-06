@@ -3,6 +3,7 @@ package org.sakaiproject.profile2.logic;
 import java.util.Date;
 import java.util.List;
 
+import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfileImageExternal;
 import org.sakaiproject.profile2.model.ProfilePreferences;
 import org.sakaiproject.profile2.model.ProfilePrivacy;
@@ -21,34 +22,28 @@ import org.sakaiproject.profile2.model.SearchResult;
 
 public interface ProfileLogic {
 
-	
 	/**
-	 * Get a list of unconfirmed Friend requests for a given user. Uses a native SQL query
-	 * Returns: (all those where userId is the friend_uuid and confirmed=false)
-	 *
-	 * @param userId		uuid of the user to retrieve the list of friends for
-	 */
-	public List<String> getFriendRequestsForUser(final String userId);
-	
-	/**
-	 * Get a list of confirmed friends for a given user. Uses a native SQL query so we can use unions
-	 * Returns: (all those where userId is the user_uuid and confirmed=true) & (all those where user is friend_uuid and confirmed=true)
-	 *
-	 * This only returns userIds, as I havent had a need for getting Friend objects yet (ie more than one param returned)
-	 * If required, simply implement this again, with a modified HBM query to add the extra fields
-	 * and Transform to Friend object.
-	 * ie q.setResultTransformer(Transformers.aliasToBean(Friend.class));
+	 * Gets a list of Persons's that are connected to this user
 	 * 
-	 * @param userId		uuid of the user to retrieve the list of friends for
-	 */
-	public List<String> getConfirmedFriendUserIdsForUser(final String userId);
-		
-	/**
-	 * get total number of confirmed friends (used by FriendsFeed to get total, not just the number in the grid)
-	 * @param userId of person to get count of froiends for
+	 * @param userId		uuid of the user to retrieve the list of connections for
 	 * @return
 	 */
-	public int countConfirmedFriendUserIdsForUser(final String userId);
+	public List<Person> getConnectionsForUser(final String userId);
+	
+	/**
+	 * Gets a count of the number of connections a user has.
+	 * @param userId		uuid of the user to retrieve the count for
+	 * @return
+	 */
+	public int getCountConnectionsForUser(final String userId);
+	
+	/**
+	 * Gets a list of Persons's that have unconfirmed connection requests to this person
+	 * 
+	 * @param userId		uuid of the user to retrieve the list of connections for
+	 * @return
+	 */
+	public List<Person> getConnectionRequestsForUser(final String userId);
 	
 	/**
 	 * Make a request for friendId to be a friend of userId
@@ -667,5 +662,8 @@ public interface ProfileLogic {
 	 * @return
 	 */
 	public String getUnavailableImageURL();
+	
+	
+	
 	
 }

@@ -20,6 +20,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.sakaiproject.profile2.logic.ProfileLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
+import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfilePrivacy;
 import org.sakaiproject.profile2.model.SearchResult;
 import org.sakaiproject.profile2.tool.Locator;
@@ -88,11 +89,11 @@ public class RequestedFriends extends Panel {
 
 			protected void populateItem(final Item item) {
 		        
-		    	//get friendUuid
-		    	final String friendUuid = (String)item.getModelObject();
+				final Person person = (Person)item.getModelObject();
+				final String friendUuid = person.getUuid();
 		    			    	
 		    	//get name
-		    	String displayName = sakaiProxy.getUserDisplayName(friendUuid);
+		    	String displayName = person.getDisplayName();
 		    	
 		    	//get privacy record for the friend
 		    	ProfilePrivacy privacy = profileLogic.getPrivacyRecordForUser(friendUuid);
@@ -135,7 +136,9 @@ public class RequestedFriends extends Panel {
 					public void onClick(AjaxRequestTarget target) {
 						
 						//get this item, and set content for modalwindow
-				    	String friendUuid = (String)getParent().getModelObject();
+						Person person = (Person)getParent().getModelObject();
+						String friendUuid = person.getUuid();
+						
 						connectionWindow.setContent(new IgnoreFriend(connectionWindow.getContentId(), connectionWindow, friendActionModel, userUuid, friendUuid)); 
 
 						//modalwindow handler 
@@ -177,7 +180,9 @@ public class RequestedFriends extends Panel {
 					public void onClick(AjaxRequestTarget target) {
 						
 						//get this item, and set content for modalwindow
-				    	String friendUuid = (String)getParent().getModelObject();
+						Person person = (Person)getParent().getModelObject();
+						String friendUuid = person.getUuid();
+						
 						connectionWindow.setContent(new ConfirmFriend(connectionWindow.getContentId(), connectionWindow, friendActionModel, userUuid, friendUuid)); 
 
 						//modalwindow handler 

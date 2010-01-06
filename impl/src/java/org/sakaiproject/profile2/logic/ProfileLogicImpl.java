@@ -20,6 +20,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfileFriend;
 import org.sakaiproject.profile2.model.ProfileImage;
 import org.sakaiproject.profile2.model.ProfileImageExternal;
@@ -30,8 +31,8 @@ import org.sakaiproject.profile2.model.ResourceWrapper;
 import org.sakaiproject.profile2.model.SearchResult;
 import org.sakaiproject.profile2.util.ProfileConstants;
 import org.sakaiproject.profile2.util.ProfileUtils;
-//import org.sakaiproject.tinyurl.api.TinyUrlService;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -71,77 +72,56 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 	private static final String OLDEST_STATUS_DATE = "oldestStatusDate"; //$NON-NLS-1$
 	private static final String SEARCH = "search"; //$NON-NLS-1$
 	
-	
-
-	
 	/**
  	 * {@inheritDoc}
  	 */
-	public List<String> getFriendRequestsForUser(final String userId) {
+	public List<Person> getConnectionsForUser(String userId) {
 		
-		if(userId == null){
-	  		throw new IllegalArgumentException("Null Argument in Profile.getFriendRequestsForUser()"); //$NON-NLS-1$
-	  	}
+		List<User> users = new ArrayList<User>();
+		List<Person> connections = new ArrayList<Person>();
+		users = UserDirectoryService.getUsers(getConfirmedConnectionUserIdsForUser(userId));
 		
-		List<String> requests = new ArrayList<String>();
+		for(User u: users) {
+			Person p = new Person();
+			p.setUuid(u.getId());
+			p.setDisplayName(u.getDisplayName());
+			p.setType(u.getType());
+				
+			connections.add(p);
+		}
 		
-		//get friends of this user [and map it automatically to the Friend object]
-		//updated: now just returns a List of Strings
-		HibernateCallback hcb = new HibernateCallback() {
-	  		public Object doInHibernate(Session session) throws HibernateException, SQLException {
-	  			
-	  			Query q = session.getNamedQuery(QUERY_GET_FRIEND_REQUESTS_FOR_USER);
-	  			q.setParameter(USER_UUID, userId, Hibernate.STRING);
-	  			q.setBoolean("false", Boolean.FALSE); //$NON-NLS-1$
-	  			//q.setResultTransformer(Transformers.aliasToBean(Friend.class));
-	  			
-	  			return q.list();
-	  		}
-	  	};
-	  	
-	  	requests = (List<String>) getHibernateTemplate().executeFind(hcb);
-	  	
-	  	return requests;
-	}
-	
-	/**
- 	 * {@inheritDoc}
- 	 */
-	public List<String> getConfirmedFriendUserIdsForUser(final String userId) {
-		
-		List<String> userUuids = new ArrayList<String>();
-		
-		//get 
-		HibernateCallback hcb = new HibernateCallback() {
-	  		public Object doInHibernate(Session session) throws HibernateException, SQLException {
-	  			
-	  		
-	  			Query q = session.getNamedQuery(QUERY_GET_CONFIRMED_FRIEND_USERIDS_FOR_USER);
-	  			q.setParameter(USER_UUID, userId, Hibernate.STRING);
-	  			q.setBoolean("true", Boolean.TRUE); //$NON-NLS-1$
-	  			return q.list();
-	  		}
-	  	};
-	  	
-	  	userUuids = (List<String>) getHibernateTemplate().executeFind(hcb);
-	
-	  	return userUuids;
+		return connections;
 	}
 	
 	
 	/**
  	 * {@inheritDoc}
  	 */	
-	public int countConfirmedFriendUserIdsForUser(final String userId) {
-		
-		//this should operhaps be a count(*) query but since we need to use unions, hmm.
-		List<String> userUuids = new ArrayList<String>(getConfirmedFriendUserIdsForUser(userId));
-		int count = userUuids.size();
-	
-	  	return count;
+	public int getCountConnectionsForUser(final String userId) {
+		return getConnectionsForUser(userId).size();
 	}
 	
-	
+	/**
+ 	 * {@inheritDoc}
+ 	 */	
+	public List<Person> getConnectionRequestsForUser(final String userId) {
+		
+		List<User> users = new ArrayList<User>();
+		List<Person> requests = new ArrayList<Person>();
+		users = UserDirectoryService.getUsers(getRequestedConnectionUserIdsForUser(userId));
+		
+		for(User u: users) {
+			Person p = new Person();
+			p.setUuid(u.getId());
+			p.setDisplayName(u.getDisplayName());
+			p.setType(u.getType());
+				
+			requests.add(p);
+		}
+		
+		return requests;
+	}
+
 	/**
  	 * {@inheritDoc}
  	 */
@@ -361,7 +341,7 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 			log.info("Updated status for user: " + profileStatus.getUserUuid()); 
 			return true;
 		} catch (Exception e) {
-			log.error("Profile.setUserStatus() failed. " + e.getClass() + ": " + e.getMessage()); 
+			log.error("Profile.sendPrivateMessage() failed. " + e.getClass() + ": " + e.getMessage()); 
 			return false;
 		}
 		
@@ -621,7 +601,7 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 		
 		//get friends of current user
 		//TODO change this to be a single lookup rather than iterating over a list
-		List<String> friendUuids = new ArrayList<String>(getConfirmedFriendUserIdsForUser(userY));
+		List<String> friendUuids = new ArrayList<String>(getConfirmedConnectionUserIdsForUser(userY));
 		
 		//if list of confirmed friends contains this user, they are a friend
 		if(friendUuids.contains(userX)) {
@@ -1645,6 +1625,70 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 	}
 
 	
+	/**
+	 * Get a list of unconfirmed Friend requests for a given user. Uses a native SQL query
+	 * Returns: (all those where userId is the friend_uuid and confirmed=false)
+	 *
+	 * @param userId		uuid of the user to retrieve the list of friends for
+	 */
+	private List<String> getRequestedConnectionUserIdsForUser(final String userId) {
+		
+		if(userId == null){
+	  		throw new IllegalArgumentException("Null Argument in Profile.getFriendRequestsForUser()"); //$NON-NLS-1$
+	  	}
+		
+		List<String> requests = new ArrayList<String>();
+		
+		//get friends of this user [and map it automatically to the Friend object]
+		//updated: now just returns a List of Strings
+		HibernateCallback hcb = new HibernateCallback() {
+	  		public Object doInHibernate(Session session) throws HibernateException, SQLException {
+	  			
+	  			Query q = session.getNamedQuery(QUERY_GET_FRIEND_REQUESTS_FOR_USER);
+	  			q.setParameter(USER_UUID, userId, Hibernate.STRING);
+	  			q.setBoolean("false", Boolean.FALSE); //$NON-NLS-1$
+	  			//q.setResultTransformer(Transformers.aliasToBean(Friend.class));
+	  			
+	  			return q.list();
+	  		}
+	  	};
+	  	
+	  	requests = (List<String>) getHibernateTemplate().executeFind(hcb);
+	  	
+	  	return requests;
+	}
+	
+	/**
+	 * Get a list of confirmed connections for a given user. Uses a native SQL query so we can use unions
+	 * Returns: (all those where userId is the user_uuid and confirmed=true) & (all those where user is friend_uuid and confirmed=true)
+	 *
+	 * This only returns userIds. If you want a list of Person objects, see getConnectionsForUser()
+	 * 
+	 * @param userId		uuid of the user to retrieve the list of friends for
+	 */
+	private List<String> getConfirmedConnectionUserIdsForUser(final String userId) {
+		
+		List<String> userUuids = new ArrayList<String>();
+		
+		//get 
+		HibernateCallback hcb = new HibernateCallback() {
+	  		public Object doInHibernate(Session session) throws HibernateException, SQLException {
+	  			
+	  		
+	  			Query q = session.getNamedQuery(QUERY_GET_CONFIRMED_FRIEND_USERIDS_FOR_USER);
+	  			q.setParameter(USER_UUID, userId, Hibernate.STRING);
+	  			q.setBoolean("true", Boolean.TRUE); //$NON-NLS-1$
+	  			return q.list();
+	  		}
+	  	};
+	  	
+	  	userUuids = (List<String>) getHibernateTemplate().executeFind(hcb);
+	
+	  	return userUuids;
+	}
+	
+	
+	
 	
 	// helper method to check if all required twitter fields are set properly
 	private boolean checkTwitterFields(ProfilePreferences prefs) {
@@ -1698,9 +1742,6 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 	  	return userUuids;
 	}
 
-
-	
-	
 	
 	/**
 	 * Get the current ProfileImage records from the database.
@@ -1927,6 +1968,7 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 		
 		return results;
 	}
+	
 	
 	
 	//init method called when Tomcat starts up

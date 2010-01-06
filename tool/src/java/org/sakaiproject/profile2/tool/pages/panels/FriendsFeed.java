@@ -1,7 +1,5 @@
 package org.sakaiproject.profile2.tool.pages.panels;
 
-
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -17,9 +15,9 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.sakaiproject.profile2.logic.ProfileLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
+import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfilePrivacy;
 import org.sakaiproject.profile2.tool.Locator;
-import org.sakaiproject.profile2.tool.ProfileApplication;
 import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.dataproviders.FriendsFeedDataProvider;
 import org.sakaiproject.profile2.tool.pages.MyFriends;
@@ -92,10 +90,11 @@ public class FriendsFeed extends Panel {
 			
 			protected void populateItem(Item item)
 			{
-				final String friendId = (String)item.getModelObject();
+				final Person person = (Person)item.getModelObject();
+				final String friendId = person.getUuid();
 				
 				//setup info
-				String displayName = sakaiProxy.getUserDisplayName(friendId);
+				String displayName = person.getDisplayName();
 		    	boolean friend;
 		    	
 		    	
@@ -141,8 +140,8 @@ public class FriendsFeed extends Panel {
 		dataView.setColumns(3);
 		add(dataView);
 		
-		/* NUM FRIENDS LABEL (can't just use provider as it only ever returns 6, unless we modify it to return a slice. */
-		final int numFriends = profileLogic.countConfirmedFriendUserIdsForUser(ownerUserId);
+		/* NUM FRIENDS LABEL (can't just use provider as it only ever returns the number in the grid */
+		final int numFriends = profileLogic.getCountConnectionsForUser(ownerUserId);
 		Label numFriendsLabel = new Label("numFriendsLabel");
 		add(numFriendsLabel);
 		
