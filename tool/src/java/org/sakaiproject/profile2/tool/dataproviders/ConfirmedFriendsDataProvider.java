@@ -55,7 +55,8 @@ public class ConfirmedFriendsDataProvider implements IDataProvider, Serializable
 		//get list of friends for user
 		friends = getFriendsForUser(userId);
 		
-		//TODO sort list here based on some criteria.
+		//sort list based on natural sort of Person model
+		Collections.sort(friends);
 	}
 	
 	//this is a helper method to process our friends list
