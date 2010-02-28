@@ -3,6 +3,7 @@ package org.sakaiproject.profile2.tool.pages;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
@@ -47,6 +48,7 @@ public class BasePage extends WebPage implements IHeaderContributor {
 			}
 		};
 		myProfileLink.add(new Label("myProfileLabel",new ResourceModel("link.my.profile")));
+		myProfileLink.add(new AttributeModifier("title", true, new ResourceModel("link.my.profile.tooltip")));
 		add(myProfileLink);
 		
 
@@ -58,6 +60,7 @@ public class BasePage extends WebPage implements IHeaderContributor {
 			}
 		};
 		myFriendsLink.add(new Label("myFriendsLabel",new ResourceModel("link.my.friends")));
+		myFriendsLink.add(new AttributeModifier("title", true, new ResourceModel("link.my.friends.tooltip")));
 		add(myFriendsLink);
 		
 		
@@ -69,6 +72,7 @@ public class BasePage extends WebPage implements IHeaderContributor {
 			}
 		};
 		myMessagesLink.add(new Label("myMessagesLabel",new ResourceModel("link.my.messages")));
+		myMessagesLink.add(new AttributeModifier("title", true, new ResourceModel("link.my.messages.tooltip")));
 		
 		//calculate new messages
 		int unreadMessages = profile.getUnreadMessagesCount(sakaiProxy.getCurrentUserId());
@@ -101,6 +105,7 @@ public class BasePage extends WebPage implements IHeaderContributor {
 			}
 		};
 		myPrivacyLink.add(new Label("myPrivacyLabel",new ResourceModel("link.my.privacy")));
+		myPrivacyLink.add(new AttributeModifier("title", true, new ResourceModel("link.my.privacy.tooltip")));
 		add(myPrivacyLink);
 		
 		//search link
@@ -109,7 +114,8 @@ public class BasePage extends WebPage implements IHeaderContributor {
 				setResponsePage(new MySearch());
 			}
 		};
-		searchLink.add(new Label("searchLabel",new ResourceModel("link.search")));
+		searchLink.add(new Label("searchLabel",new ResourceModel("link.my.search")));
+		searchLink.add(new AttributeModifier("title", true, new ResourceModel("link.my.search.tooltip")));
 		add(searchLink);
 		
 		//preferences link
@@ -118,7 +124,8 @@ public class BasePage extends WebPage implements IHeaderContributor {
 				setResponsePage(new MyPreferences());
 			}
 		};
-		preferencesLink.add(new Label("preferencesLabel",new ResourceModel("link.preferences")));
+		preferencesLink.add(new Label("preferencesLabel",new ResourceModel("link.my.preferences")));
+		preferencesLink.add(new AttributeModifier("title", true, new ResourceModel("link.my.preferences.tooltip")));
 		add(preferencesLink);
 				
 		//rss link
