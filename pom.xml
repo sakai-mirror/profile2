@@ -149,13 +149,8 @@
     	<jasypt.version>1.5</jasypt.version>
     	<icu4j.version>3.8</icu4j.version>
     	<!-- <tinyurl.version>1.0</tinyurl.version>-->
-    	<commons.lang.version>2.1</commons.lang.version>
     	<wicketstuff.tinymce.version>1.4.1</wicketstuff.tinymce.version>
-    	
-    	<!--  needed for the dependency deployer, ie for cafe builds -->
-		<sakai.common.version>[1.0.0,1.1.0)</sakai.common.version>	
     	<legacy.profile.api.version>[2.7.0,2.8.0)</legacy.profile.api.version>
-    	
     	<url.localsite>scp://source.sakaiproject.org/var/www/html/release/profile2/${project.version}</url.localsite>
     </properties>
     
