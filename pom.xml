@@ -258,7 +258,7 @@
 	    <module>pack</module>
 	    <module>tool</module>
 	    <module>assembly</module>
-	    <module>deploy</module>
+	    <!-- <module>deploy</module>-->
 	</modules>
     
     <issueManagement>
