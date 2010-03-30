@@ -125,7 +125,7 @@ public class ConfirmFriend extends Panel {
 						message.append(newline);
 				        message.append(new StringResourceModel("email.friend.confirm.link", null, new Object[]{ currentUserName} ).getObject().toString());
 				        message.append(newline);
-						message.append(new StringResourceModel("email.friend.confirm.link.href", null, new Object[]{ url }).getObject().toString());
+						message.append(url);
 						
 						//standard footer
 						message.append(newline);

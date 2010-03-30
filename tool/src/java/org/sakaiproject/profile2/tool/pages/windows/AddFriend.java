@@ -140,7 +140,9 @@ public class AddFriend extends Panel {
 						message.append(newline);
 						message.append(new StringResourceModel("email.friend.request.link", null, new Object[]{ currentUserName }).getObject().toString());
 						message.append(newline);
-						message.append(new StringResourceModel("email.friend.request.link.href", null, new Object[]{ url }).getObject().toString());
+						message.append(url);
+						
+						//standard footer
 						message.append(newline);
 						message.append(newline);
 						message.append(new StringResourceModel("email.footer.1", this, null).getString());
