@@ -243,6 +243,20 @@ public interface SakaiProxy {
 	public String getPortalUrl();
 	
 	/**
+	 * Gets the portal path, generally /portal unless override in sakai.properties
+	 * @return
+	 */
+	public String getPortalPath();
+	
+	/**
+	 * Are we using the normal /portal? 
+	 * Deep links are broken in xsl-portal, so we need a workaround to drop the toolstate param.
+	 * See PRFL-264
+	 * @return
+	 */
+	public boolean isUsingNormalPortal();
+	
+	/**
 	 * Gets the serverUrl configuration parameter
 	 * @return
 	 */

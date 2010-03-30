@@ -640,10 +640,30 @@ public class SakaiProxyImpl implements SakaiProxy {
 		return serverConfigurationService.getServerName();
 	}
 	
+	/**
+ 	* {@inheritDoc}
+ 	*/
 	public String getPortalUrl() {
 		return serverConfigurationService.getPortalUrl();
 	}
 	
+	/**
+ 	* {@inheritDoc}
+ 	*/
+	public String getPortalPath() {
+		return serverConfigurationService.getString("portalPath", "/portal");
+	}
+	
+	/**
+ 	* {@inheritDoc}
+ 	*/
+	public boolean isUsingNormalPortal() {
+		return StringUtils.equals(getPortalPath(), "/portal");
+	}
+	
+	/**
+ 	* {@inheritDoc}
+ 	*/
 	public String getServerUrl() {
 		return serverConfigurationService.getServerUrl();
 	}
@@ -724,11 +744,14 @@ public class SakaiProxyImpl implements SakaiProxy {
 			url.append(siteId);
 			url.append("/page/");
 			url.append(pageId);
-			url.append("?toolstate-");
-			url.append(placementId);
-			url.append("=");
-			url.append(URLEncoder.encode(extraParams,"UTF-8"));
-		
+			
+			//fix for bug in xsl-portal prcessing toolstate param. See PRFL-264
+			if(isUsingNormalPortal()) {
+				url.append("?toolstate-");
+				url.append(placementId);
+				url.append("=");
+				url.append(URLEncoder.encode(extraParams,"UTF-8"));
+			}
 			return url.toString();
 		}
 		catch(Exception e) {
