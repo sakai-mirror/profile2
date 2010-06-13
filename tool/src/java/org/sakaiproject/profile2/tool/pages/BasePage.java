@@ -32,6 +32,9 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		
 		log.debug("BasePage()");
 		
+		//set page title
+		add(new Label("pageTitle", new StringResourceModel("page.title", this, null))); 
+		
 		//get SakaiProxy API
 		sakaiProxy = getSakaiProxy();
 		
@@ -260,7 +263,13 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		getSession().setLocale(locale);
 	}
 	
-	
+	/**
+	 * Allow Pages to set the title
+	 * @param model
+	 */
+	protected void setPageTitle(IModel model) {  
+		get("pageTitle").setModel(model);  
+	}  
 	
 	
 	
