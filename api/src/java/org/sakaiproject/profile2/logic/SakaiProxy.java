@@ -444,4 +444,12 @@ public interface SakaiProxy {
 	 */
 	public boolean toggleProfileLocked(String userId, boolean locked);
 	
+	/**
+	 * Generic method to get a configuration parameter from sakai.properties
+	 * @param key	key of property
+	 * @param def	default value
+	 * @return	value or default if none
+	 */
+	public String getServerConfigurationParameter(String key, String def);
+	
 }

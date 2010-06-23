@@ -150,8 +150,8 @@ public class MyStatusPanel extends Panel {
 					//post update event
 					sakaiProxy.postEvent(ProfileConstants.EVENT_STATUS_UPDATE, "/profile/"+userId, true);
 
-					//update twitter if set
-					updateTwitter(userId, statusMessage);
+					//update twitter
+					profileLogic.sendMessageToTwitter(userId, statusMessage);
 					
 					//repaint status component
 					ProfileStatusRenderer newStatus = new ProfileStatusRenderer("status", userId, currentUserId, null, "tiny");
@@ -193,16 +193,6 @@ public class MyStatusPanel extends Panel {
 		
 	}
 	
-
-	public void updateTwitter(String userId, String message) {
-		
-		if(profileLogic.isTwitterIntegrationEnabledForUser(userId)) {
-			profileLogic.sendMessageToTwitter(userId, message);
-			
-			//post update event
-			sakaiProxy.postEvent(ProfileConstants.EVENT_TWITTER_UPDATE, "/profile/"+userId, true);
-		}
-	}
 	
 	
 	/* reinit for deserialisation (ie back button) */

@@ -952,6 +952,13 @@ public class SakaiProxyImpl implements SakaiProxy {
 		return false;
 	}
 	
+	/**
+ 	* {@inheritDoc}
+ 	*/
+	public String getServerConfigurationParameter(String key, String def) {
+		return serverConfigurationService.getString(key, def);
+	}
+	
 	
 	// PRIVATE METHODS FOR SAKAIPROXY
 	

@@ -47,16 +47,6 @@ public class ProfilePreferencesServiceImpl implements ProfilePreferencesService 
 			return getPrototype(userUuid);
 		}
 		
-		//if user requested own
-		if(userUuid.equals(currentUserUuid)) {
-			return prefs;
-		}
-		
-		//not own, clean it up
-		prefs.setTwitterUsername(null);
-		prefs.setTwitterPasswordDecrypted(null);
-		prefs.setTwitterPasswordEncrypted(null);
-		
 		return prefs;
 	}
 	
@@ -82,13 +72,6 @@ public class ProfilePreferencesServiceImpl implements ProfilePreferencesService 
 			throw new SecurityException("Not allowed to save.");
 		}
 		
-		//validate twitter credentials if enabled globally and in supplied prefs
-		if(profileLogic.isTwitterIntegrationEnabledForUser(obj)) {
-			if(!profileLogic.validateTwitterCredentials(obj)) {
-				log.error("Failed to validate Twitter credentials for userUuid: " + userUuid);
-				return false;
-			}
-		}
 		
 		//save and return response
 		return persistProfilePreferences(obj);
@@ -121,14 +104,6 @@ public class ProfilePreferencesServiceImpl implements ProfilePreferencesService 
 		if(checkProfilePreferencesExists(userUuid)) {
 			log.error("userUuid: " + userUuid + " already has a ProfilePreferences record. Cannot create another.");
 			return false;
-		}
-		
-		//validate twitter credentials if enabled for user and globally
-		if(profileLogic.isTwitterIntegrationEnabledForUser(userUuid)) {
-			if(!profileLogic.validateTwitterCredentials(obj)) {
-				log.error("Failed to validate Twitter credentials for userUuid: " + userUuid);
-				return false;
-			}
 		}
 		
 		return save(obj);

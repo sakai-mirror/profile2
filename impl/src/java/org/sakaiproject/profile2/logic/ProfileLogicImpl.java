@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -19,7 +20,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.sakaiproject.profile2.model.ExternalIntegrationInfo;
 import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfileFriend;
 import org.sakaiproject.profile2.model.ProfileImage;
@@ -37,6 +38,9 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.http.AccessToken;
 
 /**
  * This is the Profile2 API Implementation to be used by the Profile2 tool only. 
@@ -64,7 +68,8 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 	private static final String QUERY_LIST_ALL_SAKAI_PERSONS = "listAllSakaiPersons"; //$NON-NLS-1$
 	private static final String QUERY_GET_PREFERENCES_RECORD = "getPreferencesRecord"; //$NON-NLS-1$
 	private static final String QUERY_GET_EXTERNAL_IMAGE_RECORD = "getProfileImageExternalRecord"; //$NON-NLS-1$
-
+	private static final String QUERY_GET_EXTERNAL_INTEGRATION_INFO="getExternalIntegrationInfo";
+	
 	// Hibernate object fields
 	private static final String USER_UUID = "userUuid"; //$NON-NLS-1$
 	private static final String FRIEND_UUID = "friendUuid"; //$NON-NLS-1$
@@ -1253,8 +1258,7 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 		ProfilePreferences prefs = new ProfilePreferences(
 				userId,
 				ProfileConstants.DEFAULT_EMAIL_REQUEST_SETTING,
-				ProfileConstants.DEFAULT_EMAIL_CONFIRM_SETTING,
-				ProfileConstants.DEFAULT_TWITTER_SETTING);
+				ProfileConstants.DEFAULT_EMAIL_CONFIRM_SETTING);
 		
 			return prefs;
 	}
@@ -1269,8 +1273,6 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 	  		throw new IllegalArgumentException("Null Argument in Profile.getPreferencesRecordForUser"); //$NON-NLS-1$
 	  	}
 		
-		ProfilePreferences prefs = null;
-		
 		HibernateCallback hcb = new HibernateCallback() {
 	  		public Object doInHibernate(Session session) throws HibernateException, SQLException {
 	  			Query q = session.getNamedQuery(QUERY_GET_PREFERENCES_RECORD);
@@ -1280,16 +1282,7 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 			}
 		};
 	
-		prefs = (ProfilePreferences) getHibernateTemplate().execute(hcb);
-		
-		if(prefs == null) {
-			return null;
-		}
-		
-		//decrypt password and set into field
-		prefs.setTwitterPasswordDecrypted(ProfileUtils.decrypt(prefs.getTwitterPasswordEncrypted()));
-		
-		return prefs;
+		return (ProfilePreferences) getHibernateTemplate().execute(hcb);
 		
 	}
 	
@@ -1297,16 +1290,6 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
  	 * {@inheritDoc}
  	 */
 	public boolean savePreferencesRecord(ProfilePreferences prefs) {
-		
-		//validate fields are set and encrypt password if necessary, else clear them all
-		if(checkTwitterFields(prefs)) {
-			prefs.setTwitterPasswordEncrypted(ProfileUtils.encrypt(prefs.getTwitterPasswordDecrypted()));
-		} else {
-			prefs.setTwitterEnabled(false);
-			prefs.setTwitterUsername(null);
-			prefs.setTwitterPasswordDecrypted(null);
-			prefs.setTwitterPasswordEncrypted(null);
-		}
 		
 		try {
 			getHibernateTemplate().saveOrUpdate(prefs);
@@ -1317,129 +1300,6 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 			return false;
 		}
 	}
-	
-	
-	
-	/**
- 	* {@inheritDoc}
- 	*/
-	public boolean isTwitterIntegrationEnabledForUser(final String userId) {
-		
-		//check global settings
-		if(!sakaiProxy.isTwitterIntegrationEnabledGlobally()) {
-			return false;
-		}
-		
-		//check own preferences
-		ProfilePreferences profilePreferences = getPreferencesRecordForUser(userId);
-		if(profilePreferences == null) {
-			return false;
-		}
-		
-		if(profilePreferences.isTwitterEnabled()) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
- 	* {@inheritDoc}
- 	*/
-	public boolean isTwitterIntegrationEnabledForUser(ProfilePreferences prefs) {
-		
-		//check global settings
-		if(!sakaiProxy.isTwitterIntegrationEnabledGlobally()) {
-			return false;
-		}
-		
-		//check own prefs
-		if(prefs == null) {
-			return false;
-		}
-		
-		return prefs.isTwitterEnabled();
-	}
-	
-	
-	
-	
-	/**
- 	 * {@inheritDoc}
- 	 */
-	public void sendMessageToTwitter(final String userId, final String message){
-		//setup class thread to call later
-		class TwitterUpdater implements Runnable{
-			private Thread runner;
-			private String username;
-			private String password;
-			private String message;
-
-			public TwitterUpdater(String username, String password, String message) {
-				this.username=username;
-				this.password=password;
-				this.message=message;
-				
-				runner = new Thread(this,"Profile2 TwitterUpdater thread"); //$NON-NLS-1$
-				runner.start();
-			}
-			
-
-			//do it!
-			public synchronized void run() {
-				
-				Twitter twitter = new Twitter(username, password);
-				
-				try {
-					twitter.setSource(sakaiProxy.getTwitterSource());
-					twitter.update(message);
-					log.info("Twitter status updated for: " + userId); //$NON-NLS-1$
-				}
-				catch (Exception e) {
-					log.error("Profile.sendMessageToTwitter() failed. " + e.getClass() + ": " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-				}
-			}
-		}
-		
-		//get preferences for this user
-		ProfilePreferences profilePreferences = getPreferencesRecordForUser(userId);
-		
-		if(profilePreferences == null) {
-			return;
-		}
-		//get details
-		String username = profilePreferences.getTwitterUsername();
-		String password = profilePreferences.getTwitterPasswordDecrypted();
-		
-		//instantiate class to send the data
-		new TwitterUpdater(username, password, message);
-		
-	}
-	
-	/**
- 	 * {@inheritDoc}
- 	 */
-	public boolean validateTwitterCredentials(final String twitterUsername, final String twitterPassword) {
-		
-		if(StringUtils.isNotBlank(twitterUsername) && StringUtils.isNotBlank(twitterPassword)) {
-			Twitter twitter = new Twitter(twitterUsername, twitterPassword);
-			if(twitter.verifyCredentials()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
- 	 * {@inheritDoc}
- 	 */
-	public boolean validateTwitterCredentials(ProfilePreferences prefs) {
-		
-		String twitterUsername = prefs.getTwitterUsername();
-		String twitterPassword = prefs.getTwitterPasswordDecrypted();
-		return validateTwitterCredentials(twitterUsername, twitterPassword);
-	}
-
 	
 		
 	/**
@@ -1623,6 +1483,188 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 		path.append(ProfileConstants.UNAVAILABLE_IMAGE_FULL);
 		return path.toString();
 	}
+	
+	private final String TWITTER_OAUTH_CONSUMER_KEY="XzSPZIj0LxNaaoBz8XrgZQ";
+	private final String TWITTER_OAUTH_CONSUMER_SECRET="FSChsnmTufYi3X9H25YdFRxBhPXgnh2H0lMnLh7ZVG4";
+	
+	
+	/**
+ 	 * {@inheritDoc}
+ 	 */
+	public ExternalIntegrationInfo getExternalIntegrationInfo(final String userUuid) {
+		
+		ExternalIntegrationInfo ext = null;
+		
+		HibernateCallback hcb = new HibernateCallback() {
+	  		public Object doInHibernate(Session session) throws HibernateException, SQLException {
+	  			
+	  			Query q = session.getNamedQuery(QUERY_GET_EXTERNAL_INTEGRATION_INFO);
+	  			q.setParameter(USER_UUID, userUuid, Hibernate.STRING);
+	  			q.setMaxResults(1);
+	  			return q.uniqueResult();
+	  		}
+	  	};
+	  	
+	  	ext = (ExternalIntegrationInfo) getHibernateTemplate().execute(hcb);
+	  	
+		if(ext != null) {
+			return ext;
+		}
+		return getDefaultExternalIntegrationInfo(userUuid);
+	}
+	
+	
+
+	/**
+ 	 * {@inheritDoc}
+ 	 */
+	public boolean updateExternalIntegrationInfo(ExternalIntegrationInfo info) {
+		
+		try {
+			getHibernateTemplate().saveOrUpdate(info);
+			log.info("ExternalIntegrationInfo updated for user: " + info.getUserUuid());
+			return true;
+		} catch (Exception e) {
+			log.error("updateExternalIntegrationInfo failed. " + e.getClass() + ": " + e.getMessage());  
+			return false;
+		}
+		
+	}
+	
+	
+	/**
+ 	 * {@inheritDoc}
+ 	 */
+	public Map<String,String> getTwitterOAuthConsumerDetails() {
+		
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("key", sakaiProxy.getServerConfigurationParameter("profile2.twitter.oauth.key", TWITTER_OAUTH_CONSUMER_KEY));
+		map.put("secret", sakaiProxy.getServerConfigurationParameter("profile2.twitter.oauth.secret", TWITTER_OAUTH_CONSUMER_SECRET));
+		return map;
+	}
+	
+	
+	/**
+ 	 * {@inheritDoc}
+ 	 */
+	public String getTwitterName(ExternalIntegrationInfo info) {
+		
+		if(info == null){
+			return null;
+		}
+		
+		//get values
+		String token = info.getTwitterToken();
+		String secret = info.getTwitterSecret();
+		
+		if(StringUtils.isNotBlank(token) && StringUtils.isNotBlank(secret)) {
+
+			//global config
+			Map<String,String> config = getTwitterOAuthConsumerDetails();
+
+			//token for user
+			AccessToken accessToken = new AccessToken(token, secret);
+			
+			//setup
+			Twitter twitter = new TwitterFactory().getOAuthAuthorizedInstance(config.get("key"), config.get("secret"), accessToken);
+			
+			//check
+			try {
+				return twitter.verifyCredentials().getScreenName();
+			} catch (TwitterException e) {
+				log.error("Error retrieving Twitter credentials: " + e.getClass() + ": " + e.getMessage());
+			}
+		}
+		return null;
+	}
+	
+	/**
+ 	 * {@inheritDoc}
+ 	 */
+	public boolean validateTwitterCredentials(ExternalIntegrationInfo info) {
+		return StringUtils.isNotBlank(getTwitterName(info));
+	}
+	
+	/**
+ 	 * {@inheritDoc}
+ 	 */
+	public void sendMessageToTwitter(final String userUuid, final String message){
+		//setup class thread to call later
+		class TwitterUpdater implements Runnable{
+			private Thread runner;
+			private String userUuid;
+			private String userToken;
+			private String userSecret;
+			private String message;
+
+			public TwitterUpdater(String userUuid, String userToken, String userSecret, String message) {
+				this.userUuid=userUuid;
+				this.userToken=userToken;
+				this.userSecret=userSecret;
+				this.message=message;
+				
+				runner = new Thread(this,"Profile2 TwitterUpdater thread"); 
+				runner.start();
+			}
+			
+
+			//do it!
+			public synchronized void run() {
+				
+				//global config
+				Map<String,String> config = getTwitterOAuthConsumerDetails();
+
+				//token for user
+				AccessToken accessToken = new AccessToken(userToken, userSecret);
+				
+				//setup
+				Twitter twitter = new TwitterFactory().getOAuthAuthorizedInstance(config.get("key"), config.get("secret"), accessToken);
+				
+				try {
+					twitter.updateStatus(message);
+					log.info("Twitter status updated for: " + userUuid); 
+					
+					//post update event
+					sakaiProxy.postEvent(ProfileConstants.EVENT_TWITTER_UPDATE, "/profile/"+userUuid, true);
+				}
+				catch (Exception e) {
+					log.error("ProfileLogic.sendMessageToTwitter() failed. " + e.getClass() + ": " + e.getMessage());  
+				}
+			}
+		}
+		
+		//is twitter enabled
+		if(!sakaiProxy.isTwitterIntegrationEnabledGlobally()){
+			return;
+		}
+			
+		//get user info
+		ExternalIntegrationInfo info = getExternalIntegrationInfo(userUuid);
+		if(info == null){
+			return;
+		}
+		String token = info.getTwitterToken();
+		String secret = info.getTwitterSecret();
+		if(StringUtils.isBlank(token) || StringUtils.isBlank(secret)) {
+			return;
+		}
+		
+		//instantiate class to send the data
+		new TwitterUpdater(userUuid, token, secret, message);
+	}
+	
+	
+	/**
+	 * Get a default record, will only contain the userUuid
+	 * @param userUuid
+	 * @return
+	 */
+	private ExternalIntegrationInfo getDefaultExternalIntegrationInfo(String userUuid) {
+		ExternalIntegrationInfo info = new ExternalIntegrationInfo();
+		info.setUserUuid(userUuid);
+		return info;
+		
+	}
 
 	
 	/**
@@ -1686,17 +1728,6 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 	
 	  	return userUuids;
 	}
-	
-	
-	
-	
-	// helper method to check if all required twitter fields are set properly
-	private boolean checkTwitterFields(ProfilePreferences prefs) {
-		return (prefs.isTwitterEnabled() &&
-				StringUtils.isNotBlank(prefs.getTwitterUsername()) &&
-				StringUtils.isNotBlank(prefs.getTwitterPasswordDecrypted()));
-	}
-	
 	
 	
 	//private method to query SakaiPerson for matches
@@ -1968,6 +1999,10 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 		
 		return results;
 	}
+	
+	
+	
+	
 	
 	
 	
