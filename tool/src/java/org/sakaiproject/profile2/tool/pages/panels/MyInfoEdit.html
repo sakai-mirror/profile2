@@ -82,6 +82,7 @@
 		defaults to today if none set
 		http://docs.jquery.com/UI/Datepicker/datepicker#options
 		*/
+		/* PRFL-267, alt text below is hardcoded. Fixed in 1.4, cannot be fixed in 1.3 */
 		$(document).ready(function(){
 			$('.datePicker').datepicker({
 				yearRange: '-100:+1',
@@ -91,6 +92,7 @@
 				maxDate: new Date(),  
 				showOn: 'both', 
 				buttonImage: '/library/image/silk/calendar.png',
+				buttonText: 'Select your birth date. You can control the display of your birth year in your Preferences.',
 				buttonImageOnly: true
 			});
 		});
