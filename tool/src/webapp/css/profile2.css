@@ -227,6 +227,7 @@ h2 {
 	display:block;
 	font-weight: bold;
 	background-color: #B8D5F8;
+	word-wrap: break-word;
 }
 	
 .sideBoxContent {
@@ -506,7 +507,8 @@ h2 {
 	vertical-align: top;
 	width: 55px;
 	max-width: 55px;
-	overflow: hidden;
+	word-wrap: break-word;
+	white-space: normal;
 	margin: 1px;
 	text-align: center;
 }
@@ -525,7 +527,6 @@ h2 {
 .friendsFeedCaption {
 	margin-top: 0;
 	font-size: 60%;
-	overflow: hidden;
 	color: #3355BB;
 	cursor: pointer;
 	/*border: 1px solid green;*/
