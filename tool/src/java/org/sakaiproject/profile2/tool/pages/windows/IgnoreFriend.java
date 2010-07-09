@@ -105,6 +105,7 @@ public class IgnoreFriend extends Panel {
             }
 		};
 		submitButton.add(new FocusOnLoadBehaviour());
+		submitButton.add(new AttributeModifier("title", true, new StringResourceModel("accessibility.connection.ignore", null, new Object[]{ friendName } )));
 		form.add(submitButton);
 		
         
