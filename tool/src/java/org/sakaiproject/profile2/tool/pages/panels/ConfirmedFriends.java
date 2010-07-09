@@ -29,7 +29,6 @@ import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.components.ProfileStatusRenderer;
 import org.sakaiproject.profile2.tool.dataproviders.ConfirmedFriendsDataProvider;
 import org.sakaiproject.profile2.tool.models.FriendAction;
-import org.sakaiproject.profile2.tool.pages.MyProfile;
 import org.sakaiproject.profile2.tool.pages.ViewProfile;
 import org.sakaiproject.profile2.tool.pages.windows.RemoveFriend;
 import org.sakaiproject.profile2.util.ProfileConstants;
@@ -220,6 +219,7 @@ public class ConfirmedFriends extends Panel {
 					}
 				};
 				ContextImage removeFriendIcon = new ContextImage("removeFriendIcon",new Model(ProfileConstants.DELETE_IMG));
+				removeFriendIcon.add(new AttributeModifier("alt", true, new StringResourceModel("accessibility.connection.remove", null, new Object[]{ displayName } )));
 				removeFriendLink.add(removeFriendIcon);
 				removeFriendLink.add(new AttributeModifier("title", true,new ResourceModel("link.title.removefriend")));
 				item.add(removeFriendLink);

@@ -18,11 +18,11 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.sakaiproject.profile2.logic.ProfileLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfilePrivacy;
-import org.sakaiproject.profile2.model.SearchResult;
 import org.sakaiproject.profile2.tool.Locator;
 import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.components.ProfileStatusRenderer;
@@ -170,6 +170,7 @@ public class RequestedFriends extends Panel {
 					}
 				};
 				ContextImage ignoreFriendIcon = new ContextImage("ignoreFriendIcon",new Model(ProfileConstants.CANCEL_IMG));
+				ignoreFriendIcon.add(new AttributeModifier("alt", true, new StringResourceModel("accessibility.connection.ignore", null, new Object[]{ displayName } )));
 				ignoreFriendLink.add(ignoreFriendIcon);
 				ignoreFriendLink.add(new AttributeModifier("title", true,new ResourceModel("link.title.ignorefriend")));
 				item.add(ignoreFriendLink);
@@ -217,6 +218,7 @@ public class RequestedFriends extends Panel {
 					}
 				};
 				ContextImage confirmFriendIcon = new ContextImage("confirmFriendIcon",new Model(ProfileConstants.ACCEPT_IMG));
+				confirmFriendIcon.add(new AttributeModifier("alt", true, new StringResourceModel("accessibility.connection.confirm", null, new Object[]{ displayName } )));
 				confirmFriendLink.add(confirmFriendIcon);
 				confirmFriendLink.add(new AttributeModifier("title", true,new ResourceModel("link.title.confirmfriend")));
 				item.add(confirmFriendLink);
