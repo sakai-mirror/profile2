@@ -21,6 +21,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.sakaiproject.profile2.logic.ProfileLogic;
 import org.sakaiproject.profile2.model.ExternalIntegrationInfo;
+import org.sakaiproject.profile2.tool.components.AjaxExternalLink;
 import org.sakaiproject.profile2.tool.Locator;
 import org.sakaiproject.profile2.tool.models.SimpleText;
 import org.sakaiproject.profile2.util.ProfileConstants;
@@ -125,22 +126,10 @@ public class TwitterPrefsPane extends Panel {
 		
 		
 		//auth link/label
-		final IndicatingAjaxLink twitterAuthLink = new IndicatingAjaxLink("twitterAuthLink") {
-			private static final long serialVersionUID = 1L;
+ 		final AjaxExternalLink<String> twitterAuthLink = new AjaxExternalLink<String>("twitterAuthLink", getTwitterAuthorisationUrl()) {
+ 			private static final long serialVersionUID = 1L;
 
 			public void onClick(AjaxRequestTarget target) {
-				
-				//get auth url
-				String authorisationUrl = getTwitterAuthorisationUrl();
-				
-				if(StringUtils.isBlank(authorisationUrl)){
-					//TODO change this
-					target.appendJavascript("alert('Error getting the Twitter authorisation URL. Please try again later.');");
-					return;
-				}
-				
-				//open window
-				target.appendJavascript("window.open('" + requestToken.getAuthorizationURL() + "','Link your Twitter account','width=800,height=400');");
 				
 				//enable code box and button
 				twitterAuthCode.setEnabled(true);
