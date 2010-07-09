@@ -166,6 +166,9 @@ public class MyStatusPanel extends Panel {
 						target.addComponent(newStatus);
 						target.addComponent(clearLink);
 						status=newStatus; //update reference
+						
+						//reset the field
+						target.appendJavascript("autoFill($('#" + statusField.getMarkupId() + "'), '" + defaultStatus + "');");
 					}
 					
 				} else {
