@@ -589,7 +589,11 @@ public class ProfileServiceImpl implements ProfileService {
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.otherInformation"));
 			sb.append("</span>");
-			sb.append(userProfile.getOtherInformation());
+			
+			//PRFL-389 abbreviate long personal summary
+			int maxLength = Integer.parseInt(sakaiProxy.getServerConfigurationParameter("profile2.formatted.profile.summary.max", ProfileConstants.FORMATTED_PROFILE_SUMMARY_MAX_LENGTH));
+			sb.append(StringUtils.abbreviate(userProfile.getOtherInformation(), maxLength));
+			
 			sb.append("</div>");
 		}
 		
