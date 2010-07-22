@@ -17,6 +17,7 @@ import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
@@ -218,7 +219,7 @@ public class ViewProfile extends BasePage {
 		//homepage
 		WebMarkupContainer homepageContainer = new WebMarkupContainer("homepageContainer");
 		homepageContainer.add(new Label("homepageLabel", new ResourceModel("profile.homepage")));
-		homepageContainer.add(new Label("homepage", homepage));
+		homepageContainer.add(new ExternalLink("homepage", homepage, homepage));
 		contactInfoContainer.add(homepageContainer);
 		if(StringUtils.isBlank(homepage)) {
 			homepageContainer.setVisible(false);
