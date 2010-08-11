@@ -713,7 +713,7 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
     	if(userY.equals(userX)) {
     		return true;
     	}
-		
+    	
 		//if no privacy record, return whatever the flag is set as by default
     	/* deprecated by PRFL-86, privacy object will never be null now it will always be default or overridden default
     	if(profilePrivacy == null) {

@@ -26,6 +26,7 @@ import org.sakaiproject.profile2.model.UserProfile;
 import org.sakaiproject.profile2.service.ProfileImageService;
 import org.sakaiproject.profile2.service.ProfileService;
 import org.sakaiproject.profile2.util.ProfileConstants;
+import org.sakaiproject.site.cover.SiteService;
 
 public class ProfileEntityProviderImpl implements ProfileEntityProvider, CoreEntityProvider, AutoRegisterEntityProvider, RESTful {
 
@@ -104,17 +105,23 @@ public class ProfileEntityProviderImpl implements ProfileEntityProvider, CoreEnt
 	
 	
 	@EntityCustomAction(action="image",viewKey=EntityView.VIEW_SHOW)
-	public Object getProfileImage(OutputStream out, EntityView view, EntityReference ref) {
+	public Object getProfileImage(OutputStream out, EntityView view, Map<String,Object> params, EntityReference ref) {
 		
 		ResourceWrapper resource = new ResourceWrapper();
 		
 		boolean wantsThumbnail = "thumb".equals(view.getPathSegment(3)) ? true : false;
 		
+		//optional siteid
+		String siteId = (String)params.get("siteId");
+		if(StringUtils.isNotBlank(siteId) && !SiteService.siteExists(siteId)){
+			throw new EntityNotFoundException("Invalid siteId: " + siteId, ref.getReference());
+		}
+		
 		//get thumb if requested - will fallback by default
 		if(wantsThumbnail) {
-			resource = profileImageService.getProfileImage(ref.getId(), ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
+			resource = profileImageService.getProfileImage(ref.getId(), ProfileConstants.PROFILE_IMAGE_THUMBNAIL, siteId);
 		} else {
-			resource = profileImageService.getProfileImage(ref.getId(),ProfileConstants.PROFILE_IMAGE_MAIN);
+			resource = profileImageService.getProfileImage(ref.getId(),ProfileConstants.PROFILE_IMAGE_MAIN, siteId);
 		}
 		
 		if(resource == null || resource.getBytes() == null) {

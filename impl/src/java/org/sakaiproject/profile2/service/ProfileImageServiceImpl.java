@@ -16,8 +16,16 @@ public class ProfileImageServiceImpl implements ProfileImageService {
 	 * {@inheritDoc}
 	 */
 	public ResourceWrapper getProfileImage(String userId, int imageType) {
+		return getProfileImage(userId, imageType);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ResourceWrapper getProfileImage(String userId, int imageType, String siteId) {
 		
 		ResourceWrapper resource = new ResourceWrapper();
+		boolean allowed = false;
 		
 		//check auth and get currentUserUuid
 		String currentUserUuid = sakaiProxy.getCurrentUserId();
@@ -32,13 +40,27 @@ public class ProfileImageServiceImpl implements ProfileImageService {
 			return null;
 		}
 		
-		//check friend status
-		boolean friend = profileLogic.isUserXFriendOfUserY(userUuid, currentUserUuid);
+		//if we have a siteId and it's not a my workspace site, check if the current user has permissions to view the image
+		if(StringUtils.isNotBlank(siteId)){
+			if(!sakaiProxy.isUserMyWorkspace(siteId)) {
+				log.debug("checking if user: " + currentUserUuid + " has permissions in site: " + siteId);
+				allowed = sakaiProxy.isUserAllowedInSite(currentUserUuid, ProfileConstants.ROSTER_VIEW_PHOTO, siteId);
+			}
+		}
 		
-		//check if photo is allowed, if not return default
-		if(!profileLogic.isUserXProfileImageVisibleByUserY(userUuid, currentUserUuid, friend)) {
+		//check friend status
+		if(!allowed){
+			boolean friend = profileLogic.isUserXFriendOfUserY(userUuid, currentUserUuid);
+		
+			//check if photo is allowed
+			allowed = profileLogic.isUserXProfileImageVisibleByUserY(userUuid, currentUserUuid, friend);
+		}
+		
+		//if not allowed, return default
+		if(!allowed){
 			return getDefaultImage();
 		}
+		
 		
 		//check environment configuration (will be url or upload) and get image accordingly
 		//fall back by default. there is no real use case for not doing it.

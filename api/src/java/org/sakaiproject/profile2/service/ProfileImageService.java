@@ -21,6 +21,16 @@ public interface ProfileImageService {
 	public ResourceWrapper getProfileImage(String userId, int imageType);
 	
 	/**
+	 * Get the profile image for a user given an optional siteId to check the permissions of the current user in.
+	 * See getProfileImage(String, int) for details.
+	 * @param userId
+	 * @param imageType
+	 * @param siteId - optional siteId where if given, will check permissions for the site.
+	 * @return
+	 */
+	public ResourceWrapper getProfileImage(String userId, int imageType, String siteId);
+	
+	/**
 	 * Update the profile image for a user given the byte[] of the image.
 	 * <p>Must be logged in. Will fail if you are not allowed to update the record.
 	 * <p>Will work, but not have visible effect if the setting for the image type used in sakai.properties is not upload. ie its using URL instead

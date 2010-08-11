@@ -207,4 +207,9 @@ public class ProfileConstants {
 	public static final String FORMATTED_PROFILE_SUMMARY_MAX_LENGTH = "1000"; //profile2.formatted.profile.summary.max
 	
 	
+	/*
+	 * PERMISSIONS
+	 */
+	public static final String ROSTER_VIEW_PHOTO = "roster.viewofficialphoto";
+	
 }
