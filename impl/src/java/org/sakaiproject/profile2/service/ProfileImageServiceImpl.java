@@ -16,7 +16,7 @@ public class ProfileImageServiceImpl implements ProfileImageService {
 	 * {@inheritDoc}
 	 */
 	public ResourceWrapper getProfileImage(String userId, int imageType) {
-		return getProfileImage(userId, imageType);
+		return getProfileImage(userId, imageType, null);
 	}
 	
 	/**
