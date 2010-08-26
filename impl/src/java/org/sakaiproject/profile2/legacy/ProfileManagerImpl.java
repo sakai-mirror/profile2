@@ -102,7 +102,10 @@ public class ProfileManagerImpl implements ProfileManager {
 		}
 
 		ResourceWrapper resource = new ResourceWrapper();
-		resource = profileImageService.getProfileImage(userId, ProfileConstants.PROFILE_IMAGE_MAIN);
+		
+		//PRFL-428 pass siteId so we check perms of user in site as well
+		String currentSiteId = sakaiProxy.getCurrentSiteId();
+		resource = profileImageService.getProfileImage(userId, ProfileConstants.PROFILE_IMAGE_MAIN, currentSiteId);
 		return resource.getBytes();
 		
 	}
