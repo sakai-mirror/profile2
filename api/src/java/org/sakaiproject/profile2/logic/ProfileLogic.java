@@ -661,14 +661,14 @@ public interface ProfileLogic {
 	public boolean validateTwitterCredentials(ExternalIntegrationInfo info);
 
 	/**
-	 * Send a message to twitter ( runs in a separate thread)
+	 * Send a message to twitter (runs in a separate thread)
 	 * Will only run if twitter integration is enabled globally (ie via sakai.properties)
 	 * and if the user has linked their account.
 	 *
 	 * @param userUuid	uuid of the user
 	 * @param message	the message
 	 */
-	public void sendMessageToTwitter(final String userUuid, final String message);
+	public void sendMessageToTwitter(final String userUuid, String message);
 	
 	
 }

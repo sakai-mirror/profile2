@@ -201,6 +201,9 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		//wicketstuff TinyMCE
 		response.renderJavascriptReference(TinyMCESettings.javaScriptReference());
 		
+		//for text counter
+		response.renderJavascriptReference("javascript/jquery.apTextCounter.min.js");
+		
 		//Tool additions (at end so we can override if required)
 		response.renderString("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
 		response.renderCSSReference("css/profile2.css");

@@ -1588,7 +1588,7 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 	/**
  	 * {@inheritDoc}
  	 */
-	public void sendMessageToTwitter(final String userUuid, final String message){
+	public void sendMessageToTwitter(final String userUuid, String message){
 		//setup class thread to call later
 		class TwitterUpdater implements Runnable{
 			private Thread runner;
@@ -1648,6 +1648,10 @@ public class ProfileLogicImpl extends HibernateDaoSupport implements ProfileLogi
 		if(StringUtils.isBlank(token) || StringUtils.isBlank(secret)) {
 			return;
 		}
+		
+		//PRFL-423 limit to 140 chars
+		//Hardcoded limit because 140 is the Twitter requirement so no need to make configurable
+		message = StringUtils.substring(message, 0, 140); 
 		
 		//instantiate class to send the data
 		new TwitterUpdater(userUuid, token, secret, message);
