@@ -53,7 +53,7 @@ public class AddFriend extends Panel {
 		boolean isProfileImageAllowed = profileLogic.isUserXProfileImageVisibleByUserY(userY, privacy, userX, false);
 		
 		//image
-		add(new ProfileImageRenderer("image", userY, isProfileImageAllowed, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, true));
+		add(new ProfileImageRenderer("image", userY, isProfileImageAllowed, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, false));
 		
         //text
 		final Label text = new Label("text", new StringResourceModel("text.friend.add", null, new Object[]{ friendName } ));
