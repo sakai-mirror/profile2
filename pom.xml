@@ -246,6 +246,7 @@
     	<legacy.profile.api.version>[2.7.0,2.8.0)</legacy.profile.api.version>
     	<url.localsite>scp://source.sakaiproject.org/var/www/html/release/profile2/${project.version}</url.localsite>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<yuicompressor.plugin.version>0.9</yuicompressor.plugin.version>
     </properties>
     
     <!-- Profile2 related dependencies -->
@@ -312,16 +313,7 @@
 				<artifactId>log4j</artifactId>
 				<version>${log4j.version}</version>
 			</dependency>
-			<!--  
-			<dependency>
-      			<groupId>org.sakaiproject.tinyurl</groupId>
-      			<artifactId>tinyurl-api</artifactId>
-     			<version>${tinyurl.version}</version>
-				<scope>provided</scope>
-   			</dependency>
-   			-->
-   			
-		    
+			
 		    <!-- legacy dependency-->
 		    <dependency>
 		      	<groupId>org.sakaiproject.profile</groupId>
@@ -330,7 +322,6 @@
 		      	<scope>provided</scope>
 		    </dependency>
 		    
-  	
     	</dependencies>
     </dependencyManagement>
 
@@ -378,6 +369,11 @@
                 <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
+        <pluginRepository>
+			<name>oss.sonatype.org - github-releases</name>
+			<id>oss.sonatype.org-github-releases</id>
+			<url>http://oss.sonatype.org/content/repositories/github-releases</url>
+		</pluginRepository>
     </pluginRepositories>
     
 </project>
