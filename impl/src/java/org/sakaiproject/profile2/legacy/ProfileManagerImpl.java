@@ -60,6 +60,11 @@ public class ProfileManagerImpl implements ProfileManager {
 		
 		UserProfile userProfile = profileService.getFullUserProfile(userId);
 		
+		//PRFL-475 Roster may send the userId of a non existent user
+		if(userProfile == null) {
+			return null;
+		}
+		
 		//transform the profile
 		Profile profile = transformUserProfiletoLegacyProfile(userProfile);
 		
@@ -135,7 +140,12 @@ public class ProfileManagerImpl implements ProfileManager {
 
 		for(Iterator<String>iter = userIds.iterator(); iter.hasNext();){
 			String userId = iter.next();
-			profiles.put(userId, getUserProfileById(userId));
+			
+			//PRFL-475 skip nulls
+			Profile profile = getUserProfileById(userId);
+			if(profile != null) {
+				profiles.put(userId, profile);
+			}
 		}
 		
 		return profiles;
