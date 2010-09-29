@@ -141,6 +141,7 @@
             </resource>
 		</resources>
 		
+		<!-- compress CSS and JS -->
 		<plugins>
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
