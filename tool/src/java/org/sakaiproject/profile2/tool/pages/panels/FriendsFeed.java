@@ -156,7 +156,9 @@ public class FriendsFeed extends Panel {
 					setResponsePage(new MySearch());
 				} else {
 					//if own FriendsFeed, link to own MyFriends, otherwise link to ViewFriends
-					if(viewingUserId.equals(ownerUserId)) {
+					if (sakaiProxy.isSuperUserAndProxiedToUser(ownerUserId)) {
+						setResponsePage(new ViewFriends(ownerUserId));
+					} else if (viewingUserId.equals(ownerUserId)) {
 						setResponsePage(new MyFriends());
 					} else {
 						setResponsePage(new ViewFriends(ownerUserId));
