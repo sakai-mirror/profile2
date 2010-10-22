@@ -104,10 +104,6 @@ public class MyStatusPanel extends Panel {
 					this.setVisible(false); //hide clear link
 					target.addComponent(status);
 					target.addComponent(this);
-					
-					target.appendJavascript("autoFill($('#" + statusField.getMarkupId() + "'), '" + defaultStatus + "');");
-					//target.addComponent(statusField);
-					
 				}
 			}
 		};
