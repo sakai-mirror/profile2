@@ -412,6 +412,10 @@ h2 {
 	-webkit-border-radius: 5px;
 }
 
+.status-msg {
+	word-wrap: break-word;
+}
+
 .statusField {
 	color: #5D5D5D;
 	border: 1px solid #AAAAAA;
