@@ -584,7 +584,7 @@ public class ProfileServiceImpl implements ProfileService {
 			sb.append(userProfile.getFavouriteQuotes());
 			sb.append("</div>");
 		}
-		if(StringUtils.isNotBlank(userProfile.getOtherInformation())) {
+		if(StringUtils.isNotBlank(ProfileUtils.processHtml(userProfile.getOtherInformation()))) {
 			sb.append("<div class=\"profile2-profile-otherInformation\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.otherInformation"));

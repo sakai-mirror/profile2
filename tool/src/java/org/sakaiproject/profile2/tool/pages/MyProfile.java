@@ -148,7 +148,7 @@ public class MyProfile extends BasePage {
 		userProfile.setFavouriteTvShows(sakaiPerson.getFavouriteTvShows());
 		userProfile.setFavouriteMovies(sakaiPerson.getFavouriteMovies());
 		userProfile.setFavouriteQuotes(sakaiPerson.getFavouriteQuotes());
-		userProfile.setOtherInformation(ProfileUtils.unescapeHtml(sakaiPerson.getNotes()));
+		userProfile.setOtherInformation(sakaiPerson.getNotes());
 		
 		//PRFL-97 workaround. SakaiPerson table needs to be upgraded so locked is not null, but this handles it if not upgraded.
 		if(sakaiPerson.getLocked() == null) {

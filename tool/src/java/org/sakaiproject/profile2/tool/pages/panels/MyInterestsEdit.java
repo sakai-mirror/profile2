@@ -189,7 +189,9 @@ public class MyInterestsEdit extends Panel {
 		sakaiPerson.setFavouriteTvShows(userProfile.getFavouriteTvShows());
 		sakaiPerson.setFavouriteMovies(userProfile.getFavouriteMovies());
 		sakaiPerson.setFavouriteQuotes(userProfile.getFavouriteQuotes());
-		sakaiPerson.setNotes(ProfileUtils.processHtml(userProfile.getOtherInformation()));
+		
+		//PRFL-467 store as given, and process when it is retrieved.
+		sakaiPerson.setNotes(userProfile.getOtherInformation());
 
 		//update SakaiPerson
 		if(sakaiProxy.updateSakaiPerson(sakaiPerson)) {

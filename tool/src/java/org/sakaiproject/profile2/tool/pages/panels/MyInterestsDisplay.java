@@ -42,7 +42,7 @@ public class MyInterestsDisplay extends Panel {
 		String favouriteTvShows = userProfile.getFavouriteTvShows();
 		String favouriteMovies = userProfile.getFavouriteMovies();
 		String favouriteQuotes = userProfile.getFavouriteQuotes();
-		String otherInformation = ProfileUtils.unescapeHtml(userProfile.getOtherInformation());
+		String otherInformation = userProfile.getOtherInformation();
 		
 		//heading
 		add(new Label("heading", new ResourceModel("heading.interests")));
@@ -94,7 +94,7 @@ public class MyInterestsDisplay extends Panel {
 		//other info
 		WebMarkupContainer otherContainer = new WebMarkupContainer("otherContainer");
 		otherContainer.add(new Label("otherLabel", new ResourceModel("profile.other")));
-		otherContainer.add(new Label("otherInformation", ProfileUtils.escapeHtmlForDisplay(otherInformation)).setEscapeModelStrings(false));
+		otherContainer.add(new Label("otherInformation", ProfileUtils.processHtml(otherInformation)).setEscapeModelStrings(false));
 		add(otherContainer);
 		if(StringUtils.isBlank(otherInformation)) {
 			otherContainer.setVisible(false);
