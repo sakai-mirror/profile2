@@ -4,6 +4,7 @@ package org.sakaiproject.profile2.tool.pages.panels;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -134,8 +135,8 @@ public class MyStatusPanel extends Panel {
 				String userId = sakaiProxy.getCurrentUserId();
 				
 				//get the status. if its the default text, do not update, although we should clear the model
-				String statusMessage = simpleText.getText().trim();
-				if(statusMessage.equals(defaultStatus)) {
+				String statusMessage = StringUtils.trim(simpleText.getText());
+				if(StringUtils.isBlank(statusMessage) || StringUtils.equals(statusMessage, defaultStatus)) {
 					log.warn("Status for userId: " + userId + " was not updated because they didn't enter anything.");
 					return;
 				}
