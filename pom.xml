@@ -255,7 +255,7 @@
     	<wicketstuff.objectautocomplete.version>1.4.13</wicketstuff.objectautocomplete.version>
         <sakai.common.version>1.1.0-a04</sakai.common.version>
     	<sakai.ets.version>0.5.0-a03</sakai.ets.version>
-    	<quartz.version>1.5.2</quartz.version>
+    	<quartz.version>1.6.6</quartz.version>
     	<genericdao.version>0.9.18</genericdao.version>
     	<commons.codec.version>1.4</commons.codec.version>
     	<legacy.profile.api.version>2.8.0-a04</legacy.profile.api.version>
@@ -331,7 +331,7 @@
   				<version>${wicketstuff.objectautocomplete.version}</version>
   			</dependency>
 			<dependency>
-				<groupId>quartz</groupId>
+				<groupId>org.opensymphony.quartz</groupId>
 				<artifactId>quartz</artifactId>
 				<version>${quartz.version}</version>
 				<scope>provided</scope>
