@@ -338,7 +338,7 @@
     
     <issueManagement>
         <system>JIRA</system>
-        <url>http://jira.sakaiproject.org/jira/browse/PRFL</url>
+        <url>http://jira.sakaiproject.org/browse/PRFL</url>
     </issueManagement>
     
     <scm>
