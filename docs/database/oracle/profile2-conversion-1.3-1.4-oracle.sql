@@ -3,7 +3,7 @@ create table PROFILE_COMPANY_PROFILES_T (
 	ID number(19,0) not null,
 	USER_UUID varchar2(99) not null,
 	COMPANY_NAME varchar2(255),
-	COMPANY_DESCRIPTION varchar2(255),
+	COMPANY_DESCRIPTION varchar2(4000),
 	COMPANY_WEB_ADDRESS varchar2(255),
 	primary key (ID)
 );
@@ -120,18 +120,3 @@ alter table PROFILE_PRIVACY_T add MY_KUDOS number(1,0) default 0;
 
 /* add gallery feed preference (PRFL-382) */
 alter table PROFILE_PREFERENCES_T add SHOW_GALLERY_FEED number(1,0) default 1;
-
-/* remove twitter from preferences (PRFL-94) */
-alter table PROFILE_PREFERENCES_T drop column TWITTER_ENABLED;
-alter table PROFILE_PREFERENCES_T drop column TWITTER_USERNAME;
-alter table PROFILE_PREFERENCES_T drop column TWITTER_PASSWORD;
-
-/* add external integration table (PRFL-94) */
-create table PROFILE_EXTERNAL_INTEGRATION_T (
-	USER_UUID varchar2(99) not null,
-	TWITTER_TOKEN varchar2(255),
-	TWITTER_SECRET varchar2(255),
-	primary key (USER_UUID)
-);
-
-
