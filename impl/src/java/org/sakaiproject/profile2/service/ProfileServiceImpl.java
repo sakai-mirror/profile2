@@ -592,7 +592,7 @@ public class ProfileServiceImpl implements ProfileService {
 			
 			//PRFL-389 abbreviate long personal summary
 			int maxLength = Integer.parseInt(sakaiProxy.getServerConfigurationParameter("profile2.formatted.profile.summary.max", ProfileConstants.FORMATTED_PROFILE_SUMMARY_MAX_LENGTH));
-			sb.append(StringUtils.abbreviate(userProfile.getOtherInformation(), maxLength));
+			sb.append(ProfileUtils.trimAndAbbreviateHtml(ProfileUtils.processHtml(userProfile.getOtherInformation()), maxLength));
 			
 			sb.append("</div>");
 		}
