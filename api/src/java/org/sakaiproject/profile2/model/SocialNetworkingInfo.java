@@ -27,11 +27,11 @@ public class SocialNetworkingInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String userUuid;
-	private String facebookUsername;
-	private String linkedinUsername;
-	private String myspaceUsername;
+	private String facebookUrl;
+	private String linkedinUrl;
+	private String myspaceUrl;
 	private String skypeUsername;
-	private String twitterUsername;
+	private String twitterUrl;
 	
 	public SocialNetworkingInfo() {
 		
@@ -50,28 +50,28 @@ public class SocialNetworkingInfo implements Serializable {
 		this.userUuid = userUuid;
 	}
 
-	public String getFacebookUsername() {
-		return facebookUsername;
+	public String getFacebookUrl() {
+		return facebookUrl;
 	}
 
-	public void setFacebookUsername(String facebookUsername) {
-		this.facebookUsername = facebookUsername;
+	public void setFacebookUrl(String facebookUrl) {
+		this.facebookUrl = facebookUrl;
 	}
 
-	public String getLinkedinUsername() {
-		return linkedinUsername;
+	public String getLinkedinUrl() {
+		return linkedinUrl;
 	}
 
-	public void setLinkedinUsername(String linkedinUsername) {
-		this.linkedinUsername = linkedinUsername;
+	public void setLinkedinUrl(String linkedinUrl) {
+		this.linkedinUrl = linkedinUrl;
 	}
 
-	public String getMyspaceUsername() {
-		return myspaceUsername;
+	public String getMyspaceUrl() {
+		return myspaceUrl;
 	}
 
-	public void setMyspaceUsername(String myspaceUsername) {
-		this.myspaceUsername = myspaceUsername;
+	public void setMyspaceUrl(String myspaceUrl) {
+		this.myspaceUrl = myspaceUrl;
 	}
 
 	public String getSkypeUsername() {
@@ -82,12 +82,12 @@ public class SocialNetworkingInfo implements Serializable {
 		this.skypeUsername = skypeUsername;
 	}
 
-	public String getTwitterUsername() {
-		return twitterUsername;
+	public String getTwitterUrl() {
+		return twitterUrl;
 	}
 
-	public void setTwitterUsername(String twitterUsername) {
-		this.twitterUsername = twitterUsername;
+	public void setTwitterUrl(String twitterUrl) {
+		this.twitterUrl = twitterUrl;
 	}
 	
 	
