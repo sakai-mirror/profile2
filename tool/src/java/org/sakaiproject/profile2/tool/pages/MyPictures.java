@@ -42,7 +42,6 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.GridView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -50,7 +49,6 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.lang.Bytes;
 import org.sakaiproject.profile2.model.GalleryImage;
-import org.sakaiproject.profile2.tool.components.ErrorLevelsFeedbackMessageFilter;
 import org.sakaiproject.profile2.tool.components.GalleryImageRenderer;
 import org.sakaiproject.profile2.tool.components.IconWithClueTip;
 import org.sakaiproject.profile2.tool.dataproviders.GalleryImageDataProvider;
@@ -96,7 +94,6 @@ public class MyPictures extends BasePage {
 		
 		disableLink(myPicturesLink);
 
-		configureFeedback();
 		createGalleryForm(userUuid, pageToDisplay);
 		createAddPictureForm(userUuid);
 	}
@@ -108,12 +105,11 @@ public class MyPictures extends BasePage {
 		addPictureUploadFolder.mkdirs();
 		
 		//file feedback will be redirected here
-        Label fileFeedback = new Label("fileFeedback");
-        fileFeedback.setOutputMarkupPlaceholderTag(true);
-        add(fileFeedback);
+		final FeedbackPanel fileFeedback = new FeedbackPanel("fileFeedback");
+		fileFeedback.setOutputMarkupId(true);
         
 		Form addPictureForm = new FileUploadForm("addPictureForm", userUuid, fileFeedback);
-		
+		addPictureForm.add(fileFeedback);
 		addPictureForm.setOutputMarkupId(true);
 		add(addPictureForm);
 		
@@ -251,21 +247,6 @@ public class MyPictures extends BasePage {
 		}
 	}
 
-	private void configureFeedback() {
-
-		// activate feedback panel
-		final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-		feedbackPanel.setOutputMarkupId(true);
-		feedbackPanel.setVisible(false);
-		
-		add(feedbackPanel);
-
-		// don't show filtered feedback errors in feedback panel
-		int[] filteredErrorLevels = new int[] { FeedbackMessage.ERROR };
-		feedbackPanel.setFilter(new ErrorLevelsFeedbackMessageFilter(
-				filteredErrorLevels));
-	}
-
 	private class FileListView extends ListView<File> {
 
 		private static final long serialVersionUID = 1L;
@@ -293,9 +274,9 @@ public class MyPictures extends BasePage {
 
 		private final String userUuid;
 
-		private Label fileFeedback;
+		private FeedbackPanel fileFeedback;
 		
-		public FileUploadForm(String id, String userUuid, Label fileFeedback) {
+		public FileUploadForm(String id, String userUuid, FeedbackPanel fileFeedback) {
 			super(id);
 
 			this.userUuid = userUuid;
@@ -315,7 +296,7 @@ public class MyPictures extends BasePage {
 		protected void onSubmit() {
 			
 			if (uploads.size() == 0) {
-				setFeedbackMessage("error.gallery.upload.warning", "alertMessage");
+				error(new StringResourceModel("error.gallery.upload.warning", this, null).getString());
 				return;
 			}
 			
@@ -326,16 +307,16 @@ public class MyPictures extends BasePage {
 
 				if (upload == null) {
 					log.error("picture upload was null.");
-					setFeedbackMessage("error.no.file.uploaded", "alertMessage");
+					error(new StringResourceModel("error.no.file.uploaded", this, null).getString());
 					return;
 				} else if (upload.getSize() == 0) {
 					log.error("picture upload was empty.");
-					setFeedbackMessage("error.empty.file.uploaded", "alertMessage");
+					error(new StringResourceModel("error.empty.file.uploaded", this, null).getString());
 					return;
 				} else if (!ProfileUtils.checkContentTypeForProfileImage(upload
 						.getContentType())) {
 					log.error("attempted to upload invalid file type to gallery");
-					setFeedbackMessage("error.invalid.image.type", "alertMessage");
+					error(new StringResourceModel("error.invalid.image.type", this, null).getString());
 					return;
 				}
 
@@ -346,7 +327,7 @@ public class MyPictures extends BasePage {
 						upload.getClientFileName())) {
 
 					log.error("unable to save gallery image");
-					setFeedbackMessage("error.file.save.failed", "alertMessage");
+					error(new StringResourceModel("error.file.save.failed", this, null).getString());
 					return;
 				}
 
@@ -360,13 +341,6 @@ public class MyPictures extends BasePage {
 			}
 		}
 		
-		private void setFeedbackMessage(String feedback, String attributeModifier) {
-			
-			fileFeedback.setDefaultModel(new ResourceModel(feedback));
-			fileFeedback.add(new AttributeModifier("class", true,
-					new Model<String>(attributeModifier)));
-		}
-
 	}
 	
 }
