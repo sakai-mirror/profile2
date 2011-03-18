@@ -119,8 +119,14 @@ alter table PROFILE_PRIVACY_T add MY_KUDOS int not null default 0;
 /* add gallery feed preference (PRFL-382) */
 alter table PROFILE_PREFERENCES_T add SHOW_GALLERY_FEED bit not null default true;
 
-/* adjust size of the profile images resource uri columns (PRFL-392)*/
+/* adjust size of the profile images resource uri columns (PRFL-392) */
 alter table PROFILE_IMAGES_T modify RESOURCE_MAIN text;
 alter table PROFILE_IMAGES_T modify RESOURCE_THUMB text;
 alter table PROFILE_IMAGES_EXTERNAL_T modify URL_MAIN text;
 alter table PROFILE_IMAGES_EXTERNAL_T modify URL_THUMB text;
+
+/* add indexes to commonly searched columns (PRFL-540) */
+create index PROFILE_FRIENDS_CONFIRMED_I on PROFILE_FRIENDS_T (CONFIRMED);
+create index PROFILE_STATUS_DATE_ADDED_I on PROFILE_STATUS_T (DATE_ADDED);
+
+
