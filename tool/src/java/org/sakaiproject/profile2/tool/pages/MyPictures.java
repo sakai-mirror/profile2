@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -324,7 +325,7 @@ public class MyPictures extends BasePage {
 
 				if (!imageLogic.addGalleryImage(
 						userUuid, imageBytes, upload.getContentType(),
-						upload.getClientFileName())) {
+						FilenameUtils.getName(upload.getClientFileName()))) {
 
 					log.error("unable to save gallery image");
 					error(new StringResourceModel("error.file.save.failed", this, null).getString());
