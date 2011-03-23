@@ -109,7 +109,7 @@ public class MyPictures extends BasePage {
 		final FeedbackPanel fileFeedback = new FeedbackPanel("fileFeedback");
 		fileFeedback.setOutputMarkupId(true);
         
-		Form addPictureForm = new FileUploadForm("addPictureForm", userUuid, fileFeedback);
+		Form addPictureForm = new FileUploadForm("form", userUuid, fileFeedback);
 		addPictureForm.add(fileFeedback);
 		addPictureForm.setOutputMarkupId(true);
 		add(addPictureForm);
