@@ -611,15 +611,6 @@ public interface ProfileLogic {
 	public boolean saveExternalImage(final String userId, final String mainUrl, final String thumbnailUrl);
 	
 	/**
-	 * Gets a URL resource, reads it and returns the byte[] wrapped in ResourceWrapper along with metadata. 
-	 * Useful for displaying remote resources where you only have a URL.
-	 * 
-	 * @param url 	String url of the remote resource
-	 * @return
-	 */
-	public ResourceWrapper getURLResourceAsBytes(final String url);
-	
-	/**
 	 * Get the full URL to the default unavailable image defined in ProfileConstants
 	 * @return
 	 */

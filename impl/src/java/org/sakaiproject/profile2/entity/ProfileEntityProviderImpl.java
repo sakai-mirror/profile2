@@ -14,8 +14,10 @@ import org.sakaiproject.entitybroker.entityprovider.annotations.EntityCustomActi
 import org.sakaiproject.entitybroker.entityprovider.annotations.EntityURLRedirect;
 import org.sakaiproject.entitybroker.entityprovider.capabilities.AutoRegisterEntityProvider;
 import org.sakaiproject.entitybroker.entityprovider.capabilities.RESTful;
+import org.sakaiproject.entitybroker.entityprovider.capabilities.RequestAware;
 import org.sakaiproject.entitybroker.entityprovider.extension.ActionReturn;
 import org.sakaiproject.entitybroker.entityprovider.extension.Formats;
+import org.sakaiproject.entitybroker.entityprovider.extension.RequestGetter;
 import org.sakaiproject.entitybroker.entityprovider.search.Search;
 import org.sakaiproject.entitybroker.exception.EntityException;
 import org.sakaiproject.entitybroker.exception.EntityNotFoundException;
@@ -28,7 +30,7 @@ import org.sakaiproject.profile2.service.ProfileService;
 import org.sakaiproject.profile2.util.ProfileConstants;
 import org.sakaiproject.site.cover.SiteService;
 
-public class ProfileEntityProviderImpl implements ProfileEntityProvider, CoreEntityProvider, AutoRegisterEntityProvider, RESTful {
+public class ProfileEntityProviderImpl implements ProfileEntityProvider, CoreEntityProvider, AutoRegisterEntityProvider, RESTful,RequestAware {
 
 	public String getEntityPrefix() {
 		return ENTITY_PREFIX;
@@ -124,19 +126,34 @@ public class ProfileEntityProviderImpl implements ProfileEntityProvider, CoreEnt
 			resource = profileImageService.getProfileImage(ref.getId(),ProfileConstants.PROFILE_IMAGE_MAIN, siteId);
 		}
 		
-		if(resource == null || resource.getBytes() == null) {
+		if(resource == null) {
 			throw new EntityNotFoundException("No profile image for " + ref.getId(), ref.getReference());
 		}
 		
-		try {
-			out.write(resource.getBytes());
-			
-			ActionReturn actionReturn = new ActionReturn("BASE64", resource.getMimeType(), out);
-		
-			return actionReturn;
-		} catch (IOException e) {
-			throw new EntityException("Error retrieving profile image for " + ref.getId() + " : " + e.getMessage(), ref.getReference());
+		//PRFL-617 modified for external/default images to be served via redirect as in Profile2 1.4.x+, rather than the byte[] method.
+		//which was possibly causing the SocketException under certain circumstances, ie PRFL-295
+		final byte[] bytes = resource.getBytes();
+		if(bytes != null && bytes.length > 0) {
+			try {
+				out.write(bytes);
+				ActionReturn actionReturn = new ActionReturn("BASE64", resource.getMimeType(), out);
+				return actionReturn;
+			} catch (IOException e) {
+				throw new EntityException("Error retrieving profile image for " + ref.getId() + " : " + e.getMessage(), ref.getReference());
+			}
 		}
+		
+		
+		String url = resource.getResourceID();
+		if(StringUtils.isNotBlank(url)) {
+			try {
+				requestGetter.getResponse().sendRedirect(url);
+			} catch (IOException e) {
+				throw new EntityException("Error redirecting to external image for " + ref.getId() + " : " + e.getMessage(), ref.getReference());
+			}
+		}
+		
+		return null;
 	}
 	
 	
@@ -231,7 +248,10 @@ public class ProfileEntityProviderImpl implements ProfileEntityProvider, CoreEnt
 	
 	
 	
-	
+	private RequestGetter requestGetter;
+	public void setRequestGetter(RequestGetter requestGetter) {
+		this.requestGetter = requestGetter;
+	}
 	
 	
 	

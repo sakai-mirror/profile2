@@ -49,6 +49,10 @@
       		<artifactId>commons-lang</artifactId>
       		<scope>provided</scope>
    		</dependency>
+   		<dependency>
+      		<groupId>javax.servlet</groupId>
+      		<artifactId>servlet-api</artifactId>
+   		</dependency>
    		<!-- 
 		<dependency>
       		<groupId>org.sakaiproject.tinyurl</groupId>
@@ -79,6 +83,11 @@
       		<artifactId>entitybroker-api</artifactId>
       		<scope>provided</scope>
    		</dependency>
+   		 <dependency>
+      		<groupId>org.sakaiproject.entitybroker</groupId>
+      		<artifactId>entitybroker-utils</artifactId>
+			<version>${entitybroker.version}</version>
+    	</dependency>
 	    
 	    <!-- TESTING DEPENDENCIES -->
 	    <!-- 

@@ -69,7 +69,9 @@ public class ProfileImageServiceImpl implements ProfileImageService {
 			if(url == null) {
 				return getDefaultImage();
 			} else {
-				return profileLogic.getURLResourceAsBytes(url);
+				resource.setExternal(true);
+				resource.setResourceID(url);
+				return resource;
 			}
 		} else {
 			resource = profileLogic.getCurrentProfileImageForUserWrapped(userUuid, imageType);
@@ -189,7 +191,10 @@ public class ProfileImageServiceImpl implements ProfileImageService {
 	 * @return
 	 */
 	private ResourceWrapper getDefaultImage() {
-		return profileLogic.getURLResourceAsBytes(profileLogic.getUnavailableImageURL());
+		ResourceWrapper res = new ResourceWrapper();
+		res.setExternal(true);
+		res.setResourceID(profileLogic.getUnavailableImageURL());
+		return res;
 	}
 	
 	private SakaiProxy sakaiProxy;
