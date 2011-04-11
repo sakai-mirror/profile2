@@ -270,11 +270,16 @@ public class MyStaffEdit extends Panel {
 		String userId = userProfile.getUserUuid();
 		SakaiPerson sakaiPerson = sakaiProxy.getSakaiPerson(userId);
 
+		String tDepartment = ProfileUtils.truncate(userProfile.getDepartment(), 255, false);
+		String tPosition = ProfileUtils.truncate(userProfile.getPosition(), 255, false);
+		String tSchool = ProfileUtils.truncate(userProfile.getSchool(), 255, false);
+		String tRoom = ProfileUtils.truncate(userProfile.getRoom(), 255, false);
+		
 		//get values and set into SakaiPerson
-		sakaiPerson.setOrganizationalUnit(userProfile.getDepartment());
-		sakaiPerson.setTitle(userProfile.getPosition());
-		sakaiPerson.setCampus(userProfile.getSchool());
-		sakaiPerson.setRoomNumber(userProfile.getRoom());
+		sakaiPerson.setOrganizationalUnit(tDepartment);
+		sakaiPerson.setTitle(tPosition);
+		sakaiPerson.setCampus(tSchool);
+		sakaiPerson.setRoomNumber(tRoom);
 		sakaiPerson.setStaffProfile(userProfile.getStaffProfile());
 		sakaiPerson.setUniversityProfileUrl(userProfile.getUniversityProfileUrl());
 		sakaiPerson.setAcademicProfileUrl(userProfile.getAcademicProfileUrl());
