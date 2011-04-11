@@ -50,6 +50,7 @@ import org.sakaiproject.profile2.tool.models.FriendAction;
 import org.sakaiproject.profile2.tool.models.StringModel;
 import org.sakaiproject.profile2.tool.pages.windows.AddFriend;
 import org.sakaiproject.profile2.util.ProfileConstants;
+import org.sakaiproject.profile2.util.ProfileUtils;
 import org.sakaiproject.util.FormattedText;
 
 
@@ -392,10 +393,14 @@ public class MySearch extends BasePage {
 					
 					//get the model and text entered
 	        		StringModel stringModel = (StringModel) form.getModelObject();
-					String searchText = FormattedText.processFormattedText(stringModel.getString(), new StringBuffer());
+	        		String searchText = ProfileUtils.stripHtml(stringModel.getString());
 					
 					log.debug("MySearch() search.getSearchName(): " + searchText);
 				
+					if(StringUtils.isBlank(searchText)){
+						return;
+					}
+					
 					//clear the interest search field
 					sbiInterestField.clearInput();
 					sbiInterestField.updateModel();
@@ -471,9 +476,13 @@ public class MySearch extends BasePage {
 					
 					//get the model and text entered
 	        		StringModel stringModel = (StringModel) form.getModelObject();
-					String searchText = FormattedText.processFormattedText(stringModel.getString(), new StringBuffer());
+	        		String searchText = ProfileUtils.stripHtml(stringModel.getString());
 
 					log.debug("MySearch() search.getSearchInterest(): " + searchText);
+					
+					if(StringUtils.isBlank(searchText)){
+						return;
+					}
 					
 					//clear the name search field
 					sbnNameField.clearInput();
