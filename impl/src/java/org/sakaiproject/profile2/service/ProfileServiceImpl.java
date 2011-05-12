@@ -18,6 +18,8 @@ import org.sakaiproject.profile2.util.Messages;
 import org.sakaiproject.profile2.util.ProfileConstants;
 import org.sakaiproject.profile2.util.ProfileUtils;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * <p>This is the implementation of {@link ProfileService}; see that interface for usage details.
  * 
@@ -402,19 +404,21 @@ public class ProfileServiceImpl implements ProfileService {
 			sb.append(userProfile.getUserUuid());
 			sb.append("</div>");
 		}
-		
-		if(StringUtils.isNotBlank(userProfile.getDisplayName())) {
+
+	    String displayName = userProfile.getDisplayName();	
+		if(StringUtils.isNotBlank(displayName)) {
 			sb.append("<div class=\"profile2-profile-displayName\">");
-			sb.append(userProfile.getDisplayName());
+            sb.append(StringEscapeUtils.escapeHtml(displayName));
 			sb.append("</div>");
 		}
 		
 		//status
-		if(StringUtils.isNotBlank(userProfile.getStatusMessage())) {
-			sb.append("<div class=\"profile2-profile-statusMessage\">");
-			sb.append(userProfile.getStatusMessage());
-			sb.append("</div>");
-		}
+        String message = userProfile.getStatusMessage();
+        if(StringUtils.isNotBlank(message)) {
+            sb.append("<div class=\"profile2-profile-statusMessage\">");
+            sb.append(StringEscapeUtils.escapeHtml(message));
+            sb.append("</div>");
+        }
 		
 		if(StringUtils.isNotBlank(userProfile.getStatusDateFormatted())) {
 			sb.append("<div class=\"profile2-profile-statusDate\">");
@@ -423,12 +427,13 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 		
 		//basic info
-		if(StringUtils.isNotBlank(userProfile.getNickname())) {
+        String nickname = userProfile.getNickname();
+		if(StringUtils.isNotBlank(nickname)) {
 			sb.append("<div class=\"profile2-profile-nickname\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.nickname"));
 			sb.append("</span>");
-			sb.append(userProfile.getNickname());
+            sb.append(StringEscapeUtils.escapeHtml(nickname));
 			sb.append("</div>");
 		}
 		
@@ -492,98 +497,109 @@ public class ProfileServiceImpl implements ProfileService {
 		
 		
 		//academic info
-		if(StringUtils.isNotBlank(userProfile.getPosition())) {
+        String position = userProfile.getPosition();
+		if(StringUtils.isNotBlank(position)) {
 			sb.append("<div class=\"profile2-profile-position\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.position"));
 			sb.append("</span>");
-			sb.append(userProfile.getPosition());
+            sb.append(StringEscapeUtils.escapeHtml(position));
 			sb.append("</div>");
 		}
 		
-		if(StringUtils.isNotBlank(userProfile.getDepartment())) {
+        String department = userProfile.getDepartment();
+        if(StringUtils.isNotBlank(department)) {
 			sb.append("<div class=\"profile2-profile-department\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.department"));
 			sb.append("</span>");
-			sb.append(userProfile.getDepartment());
+            sb.append(StringEscapeUtils.escapeHtml(department));
 			sb.append("</div>");
 		}
 		
-		if(StringUtils.isNotBlank(userProfile.getSchool())) {
+        String school = userProfile.getSchool();
+		if(StringUtils.isNotBlank(school)) {
 			sb.append("<div class=\"profile2-profile-school\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.school"));
 			sb.append("</span>");
-			sb.append(userProfile.getSchool());
+            sb.append(StringEscapeUtils.escapeHtml(school));
 			sb.append("</div>");
 		}
 		
-		if(StringUtils.isNotBlank(userProfile.getRoom())) {
+        String room = userProfile.getRoom();
+		if(StringUtils.isNotBlank(room)) {
 			sb.append("<div class=\"profile2-profile-room\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.room"));
 			sb.append("</span>");
-			sb.append(userProfile.getRoom());
+            sb.append(StringEscapeUtils.escapeHtml(room));
 			sb.append("</div>");
 		}
 		
-		if(StringUtils.isNotBlank(userProfile.getCourse())) {
+        String course = userProfile.getCourse();
+		if(StringUtils.isNotBlank(course)) {
 			sb.append("<div class=\"profile2-profile-course\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.course"));
 			sb.append("</span>");
-			sb.append(userProfile.getCourse());
+            sb.append(StringEscapeUtils.escapeHtml(course));
 			sb.append("</div>");
 		}
 		
-		if(StringUtils.isNotBlank(userProfile.getSubjects())) {
+        String subjects = userProfile.getSubjects();
+		if(StringUtils.isNotBlank(subjects)) {
 			sb.append("<div class=\"profile2-profile-subjects\">");
 			sb.append("<span class=\"profile2-profile-label\">");
 			sb.append(Messages.getString("Label.subjects"));
 			sb.append("</span>");
-			sb.append(userProfile.getSubjects());
+            sb.append(StringEscapeUtils.escapeHtml(subjects));
 			sb.append("</div>");
 		}
 		
 		
 		//personal info
-		if(StringUtils.isNotBlank(userProfile.getFavouriteBooks())) {
-			sb.append("<div class=\"profile2-profile-favouriteBooks\">");
-			sb.append("<span class=\"profile2-profile-label\">");
-			sb.append(Messages.getString("Label.favouriteBooks"));
-			sb.append("</span>");
-			sb.append(userProfile.getFavouriteBooks());
-			sb.append("</div>");
-		}
-		
-		if(StringUtils.isNotBlank(userProfile.getFavouriteTvShows())) {
-			sb.append("<div class=\"profile2-profile-favouriteTvShows\">");
-			sb.append("<span class=\"profile2-profile-label\">");
-			sb.append(Messages.getString("Label.favouriteTvShows"));
-			sb.append("</span>");
-			sb.append(userProfile.getFavouriteTvShows());
-			sb.append("</div>");
-		}
-		
-		if(StringUtils.isNotBlank(userProfile.getFavouriteMovies())) {
-			sb.append("<div class=\"profile2-profile-favouriteMovies\">");
-			sb.append("<span class=\"profile2-profile-label\">");
-			sb.append(Messages.getString("Label.favouriteMovies"));
-			sb.append("</span>");
-			sb.append(userProfile.getFavouriteMovies());
-			sb.append("</div>");
-		}
-		
-		if(StringUtils.isNotBlank(userProfile.getFavouriteQuotes())) {
-			sb.append("<div class=\"profile2-profile-favouriteQuotes\">");
-			sb.append("<span class=\"profile2-profile-label\">");
-			sb.append(Messages.getString("Label.favouriteQuotes"));
-			sb.append("</span>");
 
-			sb.append(userProfile.getFavouriteQuotes());
-			sb.append("</div>");
-		}
+        String favouriteBooks = userProfile.getFavouriteBooks();
+        if(StringUtils.isNotBlank(favouriteBooks)) {
+            sb.append("<div class=\"profile2-profile-favouriteBooks\">");
+            sb.append("<span class=\"profile2-profile-label\">");
+            sb.append(Messages.getString("Label.favouriteBooks"));
+            sb.append("</span>");
+            sb.append(StringEscapeUtils.escapeHtml(favouriteBooks));
+            sb.append("</div>");
+        }
+
+        String favouriteTvShows = userProfile.getFavouriteTvShows();
+        if(StringUtils.isNotBlank(favouriteTvShows)) {
+            sb.append("<div class=\"profile2-profile-favouriteTvShows\">");
+            sb.append("<span class=\"profile2-profile-label\">");
+            sb.append(Messages.getString("Label.favouriteTvShows"));
+            sb.append("</span>");
+            sb.append(StringEscapeUtils.escapeHtml(favouriteTvShows));
+            sb.append("</div>");
+        }
+
+        String favouriteMovies = userProfile.getFavouriteMovies();
+        if(StringUtils.isNotBlank(favouriteMovies)) {
+            sb.append("<div class=\"profile2-profile-favouriteMovies\">");
+            sb.append("<span class=\"profile2-profile-label\">");
+            sb.append(Messages.getString("Label.favouriteMovies"));
+            sb.append("</span>");
+            sb.append(StringEscapeUtils.escapeHtml(favouriteMovies));
+            sb.append("</div>");
+        }
+        
+        String favouriteQuotes = userProfile.getFavouriteQuotes();
+        if(StringUtils.isNotBlank(favouriteQuotes)) {
+            sb.append("<div class=\"profile2-profile-favouriteQuotes\">");
+            sb.append("<span class=\"profile2-profile-label\">");
+            sb.append(Messages.getString("Label.favouriteQuotes"));
+            sb.append("</span>");
+            sb.append(StringEscapeUtils.escapeHtml(favouriteQuotes));
+            sb.append("</div>");
+        }
+		
 		if(StringUtils.isNotBlank(ProfileUtils.processHtml(userProfile.getOtherInformation()))) {
 			sb.append("<div class=\"profile2-profile-otherInformation\">");
 			sb.append("<span class=\"profile2-profile-label\">");
