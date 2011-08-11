@@ -5,7 +5,7 @@
 	<name>Profile2</name>
 	<groupId>org.sakaiproject.profile2</groupId>
 	<artifactId>profile2</artifactId>
-	<version>1.4.2</version>
+	<version>1.4.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 	
 	<parent>
@@ -402,9 +402,9 @@
     </issueManagement>
     
     <scm>
-    	<connection>scm:svn:https://source.sakaiproject.org/svn/profile2/tags/profile2-1.4.2</connection>
-    	<developerConnection>scm:svn:https://source.sakaiproject.org/svn/profile2/tags/profile2-1.4.2</developerConnection>
-    	<url>https://source.sakaiproject.org/svn/profile2/tags/profile2-1.4.2</url>
+    	<connection>scm:svn:https://source.sakaiproject.org/svn/profile2/branches/profile2-1.4.x</connection>
+    	<developerConnection>scm:svn:https://source.sakaiproject.org/svn/profile2/branches/profile2-1.4.x</developerConnection>
+    	<url>https://source.sakaiproject.org/svn/profile2/branches/profile2-1.4.x</url>
   	</scm>
     
 	<pluginRepositories>
