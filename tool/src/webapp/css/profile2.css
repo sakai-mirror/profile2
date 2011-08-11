@@ -415,6 +415,8 @@ h2 {
 	/*color: #444444;*/
 	vertical-align: top;
 	font-weight: normal;
+	padding-top: 4px;
+	padding-bottom: 4px;
 }
 
 .preferencesContent .label {
@@ -1206,7 +1208,7 @@ div.wicket-aa ul li.selected {
 }
 
 /* spacing between gallery images in grid */
-.gallery-form table, th, td {
+.gallery-form td {
 	border: 5px;
 	border-spacing: 5px;
 	padding: 5px;
