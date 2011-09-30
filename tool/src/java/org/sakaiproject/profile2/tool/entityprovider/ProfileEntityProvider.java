@@ -152,6 +152,10 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 	@EntityCustomAction(action="connections",viewKey=EntityView.VIEW_SHOW)
 	public Object getConnections(EntityView view, EntityReference ref) {
 		
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to get a connection list.");
+		}
+		
 		//convert input to uuid
 		String uuid = sakaiProxy.ensureUuid(ref.getId());
 		if(StringUtils.isBlank(uuid)) {
@@ -169,6 +173,10 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 		
 	@EntityCustomAction(action="friendStatus",viewKey=EntityView.VIEW_SHOW)
 	public Object getConnectionStatus(EntityReference ref, Map<String, Object> parameters) {
+		
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to get a friend status record.");
+		}
 		
 		//convert input to uuid (user making query)
 		String uuid = sakaiProxy.ensureUuid(ref.getId());
@@ -203,6 +211,10 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 	@EntityCustomAction(action="requestFriend",viewKey=EntityView.VIEW_SHOW)
 	public Object requestFriend(EntityReference ref,Map<String,Object> params) {
 		
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to make a connection request.");
+		}
+		
 		//convert input to uuid
 		String uuid = sakaiProxy.ensureUuid(ref.getId());
 		if(StringUtils.isBlank(uuid)) {
@@ -221,6 +233,10 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 	
 	@EntityCustomAction(action="removeFriend",viewKey=EntityView.VIEW_SHOW)
 	public Object removeFriend(EntityReference ref,Map<String,Object> params) {
+		
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to remove a connection.");
+		}
 		
 		//convert input to uuid
 		String uuid = sakaiProxy.ensureUuid(ref.getId());
@@ -241,6 +257,10 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 	@EntityCustomAction(action="confirmFriendRequest",viewKey=EntityView.VIEW_SHOW)
 	public Object confirmFriendRequest(EntityReference ref,Map<String,Object> params) {
 		
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to confirm a connection request.");
+		}
+		
 		//convert input to uuid
 		String uuid = sakaiProxy.ensureUuid(ref.getId());
 		if(StringUtils.isBlank(uuid)) {
@@ -260,6 +280,10 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 	
 	@EntityCustomAction(action="ignoreFriendRequest",viewKey=EntityView.VIEW_SHOW)
 	public Object ignoreFriendRequest(EntityReference ref,Map<String,Object> params) {
+		
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to ignore a connection request.");
+		}
 		
 		//convert input to uuid
 		String uuid = sakaiProxy.ensureUuid(ref.getId());

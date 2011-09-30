@@ -694,4 +694,10 @@ public interface SakaiProxy {
 	 * Get the profile2.search.maxSearchResultsPerPage value from sakai.properties
 	 */
 	public int getMaxSearchResultsPerPage();
+	
+	/**
+	 * Helper to check if the current user is logged in
+	 * @return
+	 */
+	public boolean isLoggedIn();
 }

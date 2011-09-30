@@ -58,6 +58,10 @@ public class ProfileStatusEntityProvider extends AbstractEntityProvider implemen
 	
 	public Object getEntity(EntityReference ref) {
 	
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to get a user's status.");
+		}
+		
 		//note, returning null = 404 thrown by EB.
 		
 		//convert input to uuid
@@ -72,6 +76,10 @@ public class ProfileStatusEntityProvider extends AbstractEntityProvider implemen
 	
 	public void updateEntity(EntityReference ref, Object entity, Map<String, Object> params) {
 	
+		if(!sakaiProxy.isLoggedIn()) {
+			throw new SecurityException("You must be logged in to update your status.");
+		}
+		
 		String userId = ref.getId();
 		if (StringUtils.isBlank(userId)) {
 			throw new IllegalArgumentException("Cannot update, No userId in provided reference: " + ref);

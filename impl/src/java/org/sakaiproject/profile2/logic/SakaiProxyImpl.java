@@ -1315,6 +1315,12 @@ public class SakaiProxyImpl implements SakaiProxy {
 				ProfileConstants.DEFAULT_MAX_SEARCH_RESULTS_PER_PAGE);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isLoggedIn() {
+		return StringUtils.isNotBlank(getCurrentUserId());
+	}
 	
 	
 	// PRIVATE METHODS FOR SAKAIPROXY
