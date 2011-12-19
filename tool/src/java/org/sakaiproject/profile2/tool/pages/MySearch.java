@@ -36,6 +36,7 @@ import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
@@ -134,7 +135,12 @@ public class MySearch extends BasePage {
 		searchTypeRadioGroup.add(new Label("searchTypeNameLabel", new ResourceModel("text.search.byname")));
 		searchTypeRadioGroup.add(new Label("searchTypeInterestLabel", new ResourceModel("text.search.byinterest")));
 		searchForm.add(searchTypeRadioGroup);
-				
+		
+		searchForm.add(new Label("includeConnectionsLabel", new ResourceModel("text.search.include.connections")));
+		final CheckBox includeConnections = new CheckBox("includeConnections", new Model<Boolean>(true));
+		//includeConnections.add(new AttributeModifier("title", true, new ResourceModel("text.search.include.connections.tooltip")));
+		searchForm.add(includeConnections);
+		
 		/* 
 		 * 
 		 * RESULTS
@@ -486,12 +492,12 @@ public class MySearch extends BasePage {
 							if (ProfileConstants.SEARCH_TYPE_NAME.equals(searchTerm.getSearchType())) {
 								
 								searchByName(resultsListView, searchResultsNavigator,
-										searchHistoryContainer, target, searchTerm.getSearchTerm());
+										searchHistoryContainer, target, searchTerm.getSearchTerm(), includeConnections.getModelObject());
 								
 							} else if (ProfileConstants.SEARCH_TYPE_INTEREST.equals(searchTerm.getSearchType())) {
 
 								searchByInterest(resultsListView, searchResultsNavigator,
-										searchHistoryContainer, target, searchTerm.getSearchTerm());
+										searchHistoryContainer, target, searchTerm.getSearchTerm(), includeConnections.getModelObject());
 							}
 						}
 					}
@@ -579,13 +585,13 @@ public class MySearch extends BasePage {
 					
 					if (ProfileConstants.SEARCH_TYPE_NAME.equals(searchType)) {
 						
-						searchByName(resultsListView, searchResultsNavigator, searchHistoryContainer, target, searchText);
+						searchByName(resultsListView, searchResultsNavigator, searchHistoryContainer, target, searchText, includeConnections.getModelObject());
 						
 						//post view event
 						sakaiProxy.postEvent(ProfileConstants.EVENT_SEARCH_BY_NAME, "/profile/"+currentUserUuid, false);
 					} else if (ProfileConstants.SEARCH_TYPE_INTEREST.equals(searchType)) {
 						
-						searchByInterest(resultsListView, searchResultsNavigator, searchHistoryContainer, target, searchText);
+						searchByInterest(resultsListView, searchResultsNavigator, searchHistoryContainer, target, searchText, includeConnections.getModelObject());
 						
 						//post view event
 						sakaiProxy.postEvent(ProfileConstants.EVENT_SEARCH_BY_INTEREST, "/profile/"+currentUserUuid, false);
@@ -604,11 +610,11 @@ public class MySearch extends BasePage {
         	
         	if (searchCookie.getValue().startsWith(ProfileConstants.SEARCH_TYPE_NAME)) {
         		searchTypeRadioGroup.setModel(new Model<String>(ProfileConstants.SEARCH_TYPE_NAME));
-				searchByName(resultsListView, searchResultsNavigator, searchHistoryContainer, null, searchString);
+				searchByName(resultsListView, searchResultsNavigator, searchHistoryContainer, null, searchString, includeConnections.getModelObject());
 
         	} else if (searchCookie.getValue().startsWith(ProfileConstants.SEARCH_TYPE_INTEREST)) {
         		searchTypeRadioGroup.setModel(new Model<String>(ProfileConstants.SEARCH_TYPE_INTEREST));
-        		searchByInterest(resultsListView, searchResultsNavigator, searchHistoryContainer, null, searchString);
+        		searchByInterest(resultsListView, searchResultsNavigator, searchHistoryContainer, null, searchString, includeConnections.getModelObject());
         	}
         } else {
         	// default search type is name
@@ -621,10 +627,10 @@ public class MySearch extends BasePage {
 			final PageableListView<Person> resultsListView,
 			final PagingNavigator searchResultsNavigator,
 			final WebMarkupContainer searchHistoryContainer,
-			AjaxRequestTarget target, String searchTerm) {
+			AjaxRequestTarget target, String searchTerm, boolean includeConnections) {
 						
 		//search both UDP and SakaiPerson for matches.
-		results = new ArrayList<Person>(searchLogic.findUsersByNameOrEmail(searchTerm));
+		results = new ArrayList<Person>(searchLogic.findUsersByNameOrEmail(searchTerm, includeConnections));
 		Collections.sort(results);
 		
 		int numResults = results.size();
@@ -683,10 +689,10 @@ public class MySearch extends BasePage {
 			final PageableListView<Person> resultsListView,
 			final PagingNavigator searchResultsNavigator,
 			WebMarkupContainer searchHistoryContainer,
-			AjaxRequestTarget target, String searchTerm) {
+			AjaxRequestTarget target, String searchTerm, boolean includeConnections) {
 						
 		//search SakaiPerson for matches
-		results = new ArrayList<Person>(searchLogic.findUsersByInterest(searchTerm));
+		results = new ArrayList<Person>(searchLogic.findUsersByInterest(searchTerm, includeConnections));
 		Collections.sort(results);
 		
 		int numResults = results.size();
