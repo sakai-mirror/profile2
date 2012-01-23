@@ -150,6 +150,17 @@ public class ViewProfile extends BasePage {
 		
 		final ProfilePreferences prefs = preferencesLogic.getPreferencesRecordForUser(userUuid);
 
+		//disable all fields this way, easier (PRFL-699)
+     	if (!sakaiProxy.isProfileFieldsEnabled()) {
+     		isBasicInfoAllowed=false;
+     		isContactInfoAllowed=false;
+     		isBusinessInfoAllowed = false;
+     		isPersonalInfoAllowed = false;
+     		isPersonalInfoAllowed = false;
+     		isStaffInfoAllowed = false;
+     		isStudentInfoAllowed = false;
+     		isSocialNetworkingInfoAllowed = false;
+     	}
 		
 		/* IMAGE */
 		add(new ProfileImageRenderer("photo", userUuid, prefs, privacy, ProfileConstants.PROFILE_IMAGE_MAIN, true));

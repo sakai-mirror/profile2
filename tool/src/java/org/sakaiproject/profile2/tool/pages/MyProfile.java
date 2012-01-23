@@ -446,46 +446,56 @@ public class MyProfile extends BasePage {
 		Panel myStatusPanel = new MyStatusPanel("myStatusPanel", userProfile);
 		add(myStatusPanel);
 		
-		//info panel - load the display version by default
-		Panel myInfoDisplay = new MyInfoDisplay("myInfo", userProfile);
-		myInfoDisplay.setOutputMarkupId(true);
-		add(myInfoDisplay);
-		
-		//contact panel - load the display version by default
-		Panel myContactDisplay = new MyContactDisplay("myContact", userProfile);
-		myContactDisplay.setOutputMarkupId(true);
-		add(myContactDisplay);
-		
-		//university staff panel - load the display version by default
-		Panel myStaffDisplay = new MyStaffDisplay("myStaff", userProfile);
-		myStaffDisplay.setOutputMarkupId(true);
-		add(myStaffDisplay);
-		
-		//business panel - load the display version by default
-		Panel myBusinessDisplay;
-		if (sakaiProxy.isBusinessProfileEnabled()) {
-			myBusinessDisplay = new MyBusinessDisplay("myBusiness", userProfile);
-			myBusinessDisplay.setOutputMarkupId(true);
+		if (sakaiProxy.isProfileFieldsEnabled()) {
+			//info panel - load the display version by default
+			Panel myInfoDisplay = new MyInfoDisplay("myInfo", userProfile);
+			myInfoDisplay.setOutputMarkupId(true);
+			add(myInfoDisplay);
+			
+			//contact panel - load the display version by default
+			Panel myContactDisplay = new MyContactDisplay("myContact", userProfile);
+			myContactDisplay.setOutputMarkupId(true);
+			add(myContactDisplay);
+			
+			//university staff panel - load the display version by default
+			Panel myStaffDisplay = new MyStaffDisplay("myStaff", userProfile);
+			myStaffDisplay.setOutputMarkupId(true);
+			add(myStaffDisplay);
+			
+			//business panel - load the display version by default
+			Panel myBusinessDisplay;
+			if (sakaiProxy.isBusinessProfileEnabled()) {
+				myBusinessDisplay = new MyBusinessDisplay("myBusiness", userProfile);
+				myBusinessDisplay.setOutputMarkupId(true);
+			} else {
+				myBusinessDisplay = new EmptyPanel("myBusiness");
+			}
+			add(myBusinessDisplay);
+			
+			//student panel
+			Panel myStudentDisplay = new MyStudentDisplay("myStudent", userProfile);
+			myStudentDisplay.setOutputMarkupId(true);
+			add(myStudentDisplay);
+			
+			//social networking panel
+			Panel mySocialNetworkingDisplay = new MySocialNetworkingDisplay("mySocialNetworking", userProfile);
+			mySocialNetworkingDisplay.setOutputMarkupId(true);
+			add(mySocialNetworkingDisplay);
+			
+			//interests panel - load the display version by default
+			Panel myInterestsDisplay = new MyInterestsDisplay("myInterests", userProfile);
+			myInterestsDisplay.setOutputMarkupId(true);
+			add(myInterestsDisplay);
 		} else {
-			myBusinessDisplay = new EmptyPanel("myBusiness");
+			//PRFL-699 disable profile fields
+			add(new EmptyPanel("myInfo"));
+			add(new EmptyPanel("myContact"));
+			add(new EmptyPanel("myStaff"));
+			add(new EmptyPanel("myBusiness"));
+			add(new EmptyPanel("myStudent"));
+			add(new EmptyPanel("mySocialNetworking"));
+			add(new EmptyPanel("myInterests"));
 		}
-		add(myBusinessDisplay);
-		
-		//student panel
-		Panel myStudentDisplay = new MyStudentDisplay("myStudent", userProfile);
-		myStudentDisplay.setOutputMarkupId(true);
-		add(myStudentDisplay);
-		
-		//social networking panel
-		Panel mySocialNetworkingDisplay = new MySocialNetworkingDisplay("mySocialNetworking", userProfile);
-		mySocialNetworkingDisplay.setOutputMarkupId(true);
-		add(mySocialNetworkingDisplay);
-		
-		//interests panel - load the display version by default
-		Panel myInterestsDisplay = new MyInterestsDisplay("myInterests", userProfile);
-		myInterestsDisplay.setOutputMarkupId(true);
-		add(myInterestsDisplay);
-
 		
 		//kudos panel
 		add(new AjaxLazyLoadPanel("myKudos"){
