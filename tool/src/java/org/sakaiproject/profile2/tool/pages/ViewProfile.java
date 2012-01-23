@@ -170,9 +170,11 @@ public class ViewProfile extends BasePage {
 		add(profileName);
 		
 		/*STATUS PANEL */
-		ProfileStatusRenderer status = new ProfileStatusRenderer("status", userUuid, privacy, null, "tiny");
-		status.setOutputMarkupId(true);
-		add(status);
+		if(sakaiProxy.isProfileStatusEnabled()) {
+			add(new ProfileStatusRenderer("status", userUuid, privacy, null, "tiny"));
+		} else {
+			add(new EmptyPanel("status"));
+		}
 		
 		/* BASIC INFO */
 		WebMarkupContainer basicInfoContainer = new WebMarkupContainer("mainSectionContainer_basic");
