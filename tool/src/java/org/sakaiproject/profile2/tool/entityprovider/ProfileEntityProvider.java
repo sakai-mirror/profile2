@@ -381,7 +381,6 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 	    String displayName = userProfile.getDisplayName();	
 		if(StringUtils.isNotBlank(displayName)) {
 			sb.append("<div class=\"profile2-profile-displayName\">");
-			sb.append(userProfile.getDisplayName());
 			sb.append(StringEscapeUtils.escapeHtml(displayName));
 			sb.append("</div>");
 		}
