@@ -398,7 +398,7 @@ public class MySearch extends BasePage {
 					
 					//get the model and text entered
 	        		StringModel stringModel = (StringModel) form.getModelObject();
-	        		String searchText = ProfileUtils.stripHtml(stringModel.getString());
+	        		String searchText = ProfileUtils.stripAndCleanHtml(stringModel.getString());
 					
 					log.debug("MySearch() search.getSearchName(): " + searchText);
 				
@@ -481,7 +481,7 @@ public class MySearch extends BasePage {
 					
 					//get the model and text entered
 	        		StringModel stringModel = (StringModel) form.getModelObject();
-	        		String searchText = ProfileUtils.stripHtml(stringModel.getString());
+	        		String searchText = ProfileUtils.stripAndCleanHtml(stringModel.getString());
 
 					log.debug("MySearch() search.getSearchInterest(): " + searchText);
 					

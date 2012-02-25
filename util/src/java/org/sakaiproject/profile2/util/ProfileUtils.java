@@ -40,6 +40,7 @@ import java.util.UUID;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.log4j.Logger;
@@ -377,6 +378,22 @@ public class ProfileUtils {
 	 */
 	public static String stripHtml(String s) {
 		return FormattedText.convertFormattedTextToPlaintext(s);
+	}
+	
+	/**
+	 * Strips string of HTML, escaping anything that is left to return plain text.
+	 * 
+	 * <p>Deals better with poorly formed HTML than just stripHtml and is best for XSS protection, not for storing actual data.
+	 * 
+	 * @param s The string to process
+	 * @return
+	 */
+	public static String stripAndCleanHtml(String s) {
+		//Attempt to strip HTML. This doesn't work on poorly formatted HTML though
+		String stripped = FormattedText.convertFormattedTextToPlaintext(s);
+		
+		//so we escape anything that is left
+		return StringEscapeUtils.escapeHtml(stripped);
 	}
 	
 	/**
