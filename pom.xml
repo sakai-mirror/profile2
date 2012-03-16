@@ -185,14 +185,6 @@
         </license>
     </licenses>
 	
-	<distributionManagement>
-        <site>
-            <id>sakai-site</id>
-            <name>Sakai release Site</name>
-            <url>scpexe://source.sakaiproject.org/var/www/html/release/profile2/${project.version}</url>
-        </site>
-    </distributionManagement>
-	    
     <properties>
     	<wicket.version>1.4.13</wicket.version>
     	<log4j.version>1.2.14</log4j.version>
