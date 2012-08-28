@@ -104,6 +104,9 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 		ProfileImage image = new ProfileImage();
 		boolean wantsThumbnail = "thumb".equals(view.getPathSegment(3)) ? true : false;
 		
+		//PRFL-746 manually merged parts back so we can use the official iamge support
+		boolean wantsOfficial = StringUtils.equals("official", view.getPathSegment(3)) ? true : false;
+		
 		//optional siteid
 		String siteId = (String)params.get("siteId");
 		if(StringUtils.isNotBlank(siteId) && !sakaiProxy.checkForSite(siteId)){
@@ -113,6 +116,8 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 		//get thumb if requested - will fallback by default
 		if(wantsThumbnail) {
 			image = imageLogic.getProfileImage(uuid, null, null, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, siteId);
+		} else if ((wantsOfficial) {
+			image = imageLogic.getOfficialProfileImage(uuid);
 		} else {
 			image = imageLogic.getProfileImage(uuid, null, null, ProfileConstants.PROFILE_IMAGE_MAIN, siteId);
 		}
