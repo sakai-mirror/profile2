@@ -116,7 +116,7 @@ public class ProfileEntityProvider extends AbstractEntityProvider implements Cor
 		//get thumb if requested - will fallback by default
 		if(wantsThumbnail) {
 			image = imageLogic.getProfileImage(uuid, null, null, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, siteId);
-		} else if ((wantsOfficial) {
+		} else if (wantsOfficial) {
 			image = imageLogic.getOfficialProfileImage(uuid);
 		} else {
 			image = imageLogic.getProfileImage(uuid, null, null, ProfileConstants.PROFILE_IMAGE_MAIN, siteId);
