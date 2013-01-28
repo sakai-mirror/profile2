@@ -38,6 +38,7 @@ import org.sakaiproject.profile2.logic.ProfileMessagingLogic;
 import org.sakaiproject.profile2.logic.ProfilePreferencesLogic;
 import org.sakaiproject.profile2.logic.ProfilePrivacyLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
+import org.sakaiproject.profile2.tool.components.LocaleAwareHtmlTag;
 import org.sakaiproject.profile2.util.ProfileUtils;
 
 import wicket.contrib.tinymce.settings.TinyMCESettings;
@@ -90,6 +91,9 @@ public class BasePage extends WebPage implements IHeaderContributor {
 		
 		//set Locale - all pages will inherit this.
 		setUserPreferredLocale();
+		
+		//PRFL-791 set base HTML lang attribute
+		add(new LocaleAwareHtmlTag("html"));
 		
 		//get currentUserUuid
 		String currentUserUuid = sakaiProxy.getCurrentUserId();
