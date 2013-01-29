@@ -1362,12 +1362,7 @@ div.wicket-aa ul li.selected {
 	float:right;
 }
 
-/* disabled nav link */
-.current-tab {
-	color: #5D5D5D;
-	margin-right: 1em;
-	display: inline-block;
-}
+
 
 .pager {
 	margin-top: 10px;
