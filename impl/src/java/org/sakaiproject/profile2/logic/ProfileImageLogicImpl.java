@@ -177,7 +177,7 @@ public class ProfileImageLogicImpl implements ProfileImageLogic {
 			break;
 			
 			case ProfileConstants.PICTURE_SETTING_OFFICIAL: 
-				image = getOfficialImage(currentUserUuid,image,defaultImageUrl,isSameUser);
+				image = getOfficialImage(userUuid,image,defaultImageUrl,isSameUser);
 			break;
 			
 			default:
