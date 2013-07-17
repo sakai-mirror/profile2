@@ -1432,6 +1432,14 @@ public class SakaiProxyImpl implements SakaiProxy {
 		return StringUtils.isNotBlank(getCurrentUserId());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isProfileFieldsEnabled() {
+		return serverConfigurationService.getBoolean("profile2.profile.fields.enabled", ProfileConstants.SAKAI_PROP_PROFILE2_PROFILE_FIELDS_ENABLED);
+
+	}
+	
 	// PRIVATE METHODS FOR SAKAIPROXY
 	
 	
