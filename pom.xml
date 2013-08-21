@@ -7,7 +7,7 @@
 	<artifactId>profile2</artifactId>
 		
 	<packaging>pom</packaging>
-	<version>1.5.3</version>
+	<version>1.5.4-SNAPSHOT</version>
 	
 	<parent>
 		<groupId>org.sakaiproject</groupId>
@@ -338,9 +338,9 @@
     </issueManagement>
     
     <scm>
-    	<connection>scm:svn:https://source.sakaiproject.org/svn/profile2/tags/profile2-1.5.3</connection>
-    	<developerConnection>scm:svn:https://source.sakaiproject.org/svn/profile2/tags/profile2-1.5.3</developerConnection>
-    	<url>https://source.sakaiproject.org/svn/profile2/tags/profile2-1.5.3</url>
+    	<connection>scm:svn:https://source.sakaiproject.org/svn/profile2/branches/profile2-1.5.x</connection>
+    	<developerConnection>scm:svn:https://source.sakaiproject.org/svn/profile2/branches/profile2-1.5.x</developerConnection>
+    	<url>https://source.sakaiproject.org/svn/profile2/branches/profile2-1.5.x</url>
   	</scm>
     
     <build>
