@@ -23,6 +23,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.Response;
+import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.protocol.http.WebRequestCycle;
@@ -50,6 +52,13 @@ public class ProfileApplication extends WebApplication {
 		
 		// Custom resource loader since our properties are not in the default location
 		getResourceSettings().addStringResourceLoader(new ProfileStringResourceLoader());		
+
+		// Resource Package Guard security settings to fix .htm file problem
+		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
+		if (packageResourceGuard instanceof SecurePackageResourceGuard) {
+			SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
+			guard.addPattern("+wicket/contrib/tinymce/tiny_mce/**/*.htm");
+		}
 	}
 	
 	// Throw RuntimeExceptions so they are caught by the Sakai ErrorReportHandler
