@@ -43,7 +43,7 @@ import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfilePreferences;
 import org.sakaiproject.profile2.model.ProfilePrivacy;
-import org.sakaiproject.profile2.tool.components.ProfileImage;
+import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.components.ProfileStatusRenderer;
 import org.sakaiproject.profile2.tool.dataproviders.ConfirmedFriendsDataProvider;
 import org.sakaiproject.profile2.tool.models.FriendAction;
@@ -95,7 +95,7 @@ public class ConfirmedFriends extends Panel {
 		ConfirmedFriendsDataProvider provider = new ConfirmedFriendsDataProvider(userUuid);
 		
 		//init number of friends
-		numConfirmedFriends = (int) provider.size();
+		numConfirmedFriends = provider.size();
 		
 		//model so we can update the number of friends
 		IModel<Integer> numConfirmedFriendsModel = new Model<Integer>() {
@@ -140,8 +140,8 @@ public class ConfirmedFriends extends Panel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				createWorksitePanel.setVisible(true);
-				target.add(createWorksitePanel);
-				target.appendJavaScript("fixWindowVertical();");
+				target.addComponent(createWorksitePanel);
+				target.appendJavascript("fixWindowVertical();");
 			}
 
 		};
@@ -201,11 +201,8 @@ public class ConfirmedFriends extends Panel {
 					}
 				};
 				
-				//image				
-				ProfileImage connectionPhoto = new ProfileImage("connectionPhoto", new Model<String>(personUuid));
-				connectionPhoto.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-				friendItem.add(connectionPhoto);
-
+				//image
+				friendItem.add(new ProfileImageRenderer("connectionPhoto", personUuid, prefs, privacy, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, true));
 				item.add(friendItem);
 				
 		    	//name and link to profile
@@ -250,21 +247,21 @@ public class ConfirmedFriends extends Panel {
 				            		numConfirmedFriends--;
 				            		
 				            		//remove friend item from display
-				            		target.appendJavaScript("$('#" + item.getMarkupId() + "').slideUp();");
+				            		target.appendJavascript("$('#" + item.getMarkupId() + "').slideUp();");
 				            		
 				            		//update label
-				            		target.add(confirmedFriendsHeading);
+				            		target.addComponent(confirmedFriendsHeading);
 				            		
 				            		//if none left, hide whole thing
 				            		if(numConfirmedFriends==0) {
-				            			target.appendJavaScript("$('#" + confirmedFriendsContainer.getMarkupId() + "').fadeOut();");
+				            			target.appendJavascript("$('#" + confirmedFriendsContainer.getMarkupId() + "').fadeOut();");
 				            		}
 				            	}
 							}
 				        });	
 						
 						connectionWindow.show(target);
-						target.appendJavaScript("fixWindowVertical();"); 
+						target.appendJavascript("fixWindowVertical();"); 
 					}
 				};
 				//ContextImage removeConnectionIcon = new ContextImage("removeConnectionIcon",new Model<String>(ProfileConstants.DELETE_IMG));

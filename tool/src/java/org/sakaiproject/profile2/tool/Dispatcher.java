@@ -13,28 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.sakaiproject.profile2.tool.components;
+package org.sakaiproject.profile2.tool;
 
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.IAjaxIndicatorAware;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.sakaiproject.profile2.tool.pages.BasePage;
+import org.sakaiproject.profile2.tool.pages.MyProfile;
 
-
-public class AjaxIndicator extends WebMarkupContainer implements IAjaxIndicatorAware {
-
-	public AjaxIndicator(String id) {
-		super(id);
-	}
-
-	public void onComponentTag(ComponentTag tag) {
-		super.onComponentTag(tag);
-		tag.put("src", urlFor(AbstractDefaultAjaxBehavior.INDICATOR));
-	}
-
-	public String getAjaxIndicatorMarkupId() {
-		return this.getMarkupId();
-	}
+public class Dispatcher extends BasePage {
 	
-	
+	public Dispatcher() {
+		super();
+		
+		setResponsePage(new MyProfile());
+	}
 }

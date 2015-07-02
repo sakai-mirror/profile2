@@ -19,13 +19,13 @@ import java.util.Date;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
@@ -40,6 +40,8 @@ import org.sakaiproject.profile2.logic.ProfilePrivacyLogic;
 import org.sakaiproject.profile2.logic.ProfileWallLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.WallItem;
+import org.sakaiproject.profile2.tool.components.CKEditorConfig;
+import org.sakaiproject.profile2.tool.components.CKEditorTextArea;
 import org.sakaiproject.profile2.tool.components.ErrorLevelsFeedbackMessageFilter;
 import org.sakaiproject.profile2.tool.dataproviders.WallItemDataProvider;
 import org.sakaiproject.profile2.types.PrivacyType;
@@ -113,7 +115,8 @@ public class ViewWallPanel extends Panel {
 		
 		// container for posting to my wall
 		WebMarkupContainer viewWallPostContainer = new WebMarkupContainer("viewWallPostContainer");
-		final TextArea myWallPost = new TextArea("viewWallPost", new PropertyModel<String>(wallItem, "text"));
+		final CKEditorTextArea myWallPost = new CKEditorTextArea("viewWallPost", new PropertyModel<String>(wallItem, "text"));
+		myWallPost.setEditorConfig(CKEditorConfig.createCkConfig());
 		
 		viewWallPostContainer.add(myWallPost);
 		
@@ -130,29 +133,29 @@ public class ViewWallPanel extends Panel {
 							"error.wall.post.empty"));
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model<String>("alertMessage")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 					return;
 				}
 				
 				if (false == save(form, userUuid)) {
 					formFeedback.setDefaultModel(new ResourceModel("error.wall.post.failed"));
 					formFeedback.add(new AttributeModifier("class", true, new Model<String>("alertMessage")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				} else {
 					ViewWallPanel newPanel = new ViewWallPanel(ViewWallPanel.this.getId(), userUuid);
 					newPanel.setOutputMarkupId(true);
 					ViewWallPanel.this.replaceWith(newPanel);
 					if (null != target) {
-						target.add(newPanel);
-						target.appendJavaScript("setMainFrameHeight(window.name);");
+						target.addComponent(newPanel);
+						target.appendJavascript("setMainFrameHeight(window.name);");
 					}
 				}
 			}
 			
-			//@Override
-			//protected IAjaxCallDecorator getAjaxCallDecorator() {
-			//	return CKEditorTextArea.getAjaxCallDecoratedToUpdateElementForAllEditorsOnPage();
-			//}
+			@Override
+			protected IAjaxCallDecorator getAjaxCallDecorator() {
+				return CKEditorTextArea.getAjaxCallDecoratedToUpdateElementForAllEditorsOnPage();
+			}
 		};
 		submitButton.setModel(new ResourceModel("button.wall.post"));
 		viewWallPostContainer.add(submitButton);

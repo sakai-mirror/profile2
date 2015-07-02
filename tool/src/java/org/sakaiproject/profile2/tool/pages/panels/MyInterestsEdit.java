@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.IAjaxCallDecorator;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -37,6 +38,7 @@ import org.sakaiproject.profile2.logic.ProfileLogic;
 import org.sakaiproject.profile2.logic.ProfileWallLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.UserProfile;
+import org.sakaiproject.profile2.tool.components.CKEditorTextArea;
 import org.sakaiproject.profile2.util.ProfileConstants;
 
 
@@ -147,9 +149,9 @@ public class MyInterestsEdit extends Panel {
 					newPanel.setOutputMarkupId(true);
 					thisPanel.replaceWith(newPanel);
 					if(target != null) {
-						target.add(newPanel);
+						target.addComponent(newPanel);
 						//resize iframe
-						target.appendJavaScript("setMainFrameHeight(window.name);");
+						target.appendJavascript("setMainFrameHeight(window.name);");
 					}
 				
 				} else {
@@ -158,14 +160,14 @@ public class MyInterestsEdit extends Panel {
 					
 					formFeedback.setDefaultModel(new ResourceModel("error.profile.save.interests.failed"));
 					formFeedback.add(new AttributeModifier("class", true, new Model<String>("save-failed-error")));	
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				}
             }
 			
-			//@Override
-			//protected IAjaxCallDecorator getAjaxCallDecorator() {
-			//	return CKEditorTextArea.getAjaxCallDecoratedToUpdateElementForAllEditorsOnPage();
-			//}
+			@Override
+			protected IAjaxCallDecorator getAjaxCallDecorator() {
+				return CKEditorTextArea.getAjaxCallDecoratedToUpdateElementForAllEditorsOnPage();
+			}
 		};
 		form.add(submitButton);
 		
@@ -179,9 +181,9 @@ public class MyInterestsEdit extends Panel {
 				newPanel.setOutputMarkupId(true);
 				thisPanel.replaceWith(newPanel);
 				if(target != null) {
-					target.add(newPanel);
+					target.addComponent(newPanel);
 					//resize iframe
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.appendJavascript("setMainFrameHeight(window.name);");
 					//need a scrollTo action here, to scroll down the page to the section
 				}
             	

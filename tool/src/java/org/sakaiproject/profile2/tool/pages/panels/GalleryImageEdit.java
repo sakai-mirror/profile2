@@ -31,6 +31,7 @@ import org.sakaiproject.profile2.logic.ProfilePreferencesLogic;
 import org.sakaiproject.profile2.logic.ProfileWallLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.GalleryImage;
+import org.sakaiproject.profile2.tool.components.FocusOnLoadBehaviour;
 import org.sakaiproject.profile2.tool.components.GalleryImageRenderer;
 import org.sakaiproject.profile2.tool.pages.MyPictures;
 import org.sakaiproject.profile2.tool.pages.MyProfile;
@@ -63,7 +64,7 @@ public class GalleryImageEdit extends Panel {
 	
 	public GalleryImageEdit(String id,
 			final String userId, final GalleryImage image,
-			final long galleryPageIndex) {
+			final int galleryPageIndex) {
 
 		super(id);
 
@@ -116,9 +117,9 @@ public class GalleryImageEdit extends Panel {
 		removeConfirmContainer.add(removeConfirmLabel);
 
 		AjaxFallbackButton removeConfirmButton = createRemoveConfirmButton(
-				userId, image, (int) galleryPageIndex, formFeedback,
+				userId, image, galleryPageIndex, formFeedback,
 				imageEditForm);
-		//removeConfirmButton.add(new FocusOnLoadBehaviour());
+		removeConfirmButton.add(new FocusOnLoadBehaviour());
 		removeConfirmContainer.add(removeConfirmButton);
 
 		AjaxFallbackButton removeCancelButton = createRemoveCancelButton(imageEditForm);
@@ -137,10 +138,10 @@ public class GalleryImageEdit extends Panel {
 
 		
 		AjaxFallbackButton setProfileImageConfirmButton = createSetProfileImageConfirmButton(
-				userId, image, (int) galleryPageIndex, formFeedback,
+				userId, image, galleryPageIndex, formFeedback,
 				imageEditForm);
 		
-		//setProfileImageConfirmButton.add(new FocusOnLoadBehaviour());
+		setProfileImageConfirmButton.add(new FocusOnLoadBehaviour());
 		setProfileImageConfirmContainer.add(setProfileImageConfirmButton);
 		
 		AjaxFallbackButton setProfileImageCancelButton = createSetProfileImageCancelButton(imageEditForm);
@@ -160,13 +161,13 @@ public class GalleryImageEdit extends Panel {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				target.appendJavaScript("$('#"
+				target.prependJavascript("$('#"
 						+ removeConfirmContainer.getMarkupId() + "').hide();");
 
 				imageOptionsContainer.setVisible(true);
-				target.add(imageOptionsContainer);
+				target.addComponent(imageOptionsContainer);
 
-				target.appendJavaScript("setMainFrameHeight(window.name);");
+				target.appendJavascript("setMainFrameHeight(window.name);");
 			}
 
 		};
@@ -195,7 +196,7 @@ public class GalleryImageEdit extends Panel {
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model("alertMessage")));
 
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				}
 			}
 		};
@@ -212,12 +213,12 @@ public class GalleryImageEdit extends Panel {
 
 				imageOptionsContainer.setVisible(false);
 
-				target.appendJavaScript("$('#"
+				target.prependJavascript("$('#"
 						+ imageOptionsContainer.getMarkupId() + "').hide();");
 
 				removeConfirmContainer.setVisible(true);
-				target.add(removeConfirmContainer);
-				target.appendJavaScript("setMainFrameHeight(window.name);");
+				target.addComponent(removeConfirmContainer);
+				target.prependJavascript("setMainFrameHeight(window.name);");
 			}
 
 		};
@@ -231,13 +232,13 @@ public class GalleryImageEdit extends Panel {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				target.appendJavaScript("$('#"
+				target.prependJavascript("$('#"
 						+ setProfileImageConfirmContainer.getMarkupId() + "').hide();");
 
 				imageOptionsContainer.setVisible(true);
-				target.add(imageOptionsContainer);
+				target.addComponent(imageOptionsContainer);
 
-				target.appendJavaScript("setMainFrameHeight(window.name);");
+				target.appendJavascript("setMainFrameHeight(window.name);");
 			}
 
 		};
@@ -254,12 +255,12 @@ public class GalleryImageEdit extends Panel {
 
 				imageOptionsContainer.setVisible(false);
 
-				target.appendJavaScript("$('#"
+				target.prependJavascript("$('#"
 						+ imageOptionsContainer.getMarkupId() + "').hide();");
 
 				setProfileImageConfirmContainer.setVisible(true);
-				target.add(setProfileImageConfirmContainer);
-				target.appendJavaScript("setMainFrameHeight(window.name);");
+				target.addComponent(setProfileImageConfirmContainer);
+				target.prependJavascript("setMainFrameHeight(window.name);");
 			}
 
 		};
@@ -310,7 +311,7 @@ public class GalleryImageEdit extends Panel {
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model("alertMessage")));
 
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				}
 			}
 		};

@@ -255,9 +255,9 @@ public class MyContactEdit extends Panel {
 					newPanel.setOutputMarkupId(true);
 					thisPanel.replaceWith(newPanel);
 					if(target != null) {
-						target.add(newPanel);
+						target.addComponent(newPanel);
 						//resize iframe
-						target.appendJavaScript("setMainFrameHeight(window.name);");
+						target.appendJavascript("setMainFrameHeight(window.name);");
 					}
 				
 				} else {
@@ -266,7 +266,7 @@ public class MyContactEdit extends Panel {
 					
 					formFeedback.setDefaultModel(new ResourceModel("error.profile.save.contact.failed"));
 					formFeedback.add(new AttributeModifier("class", true, new Model<String>("save-failed-error")));	
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				}
 				
 				
@@ -280,45 +280,45 @@ public class MyContactEdit extends Panel {
 				if(!email.isValid()) {
 					email.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
 					emailFeedback.setDefaultModel(new ResourceModel("EmailAddressValidator"));
-					target.add(email);
-					target.add(emailFeedback);
+					target.addComponent(email);
+					target.addComponent(emailFeedback);
 				}
 				if(!homepage.isValid()) {
 					homepage.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
 					homepageFeedback.setDefaultModel(new ResourceModel("UrlValidator"));
-					target.add(homepage);
-					target.add(homepageFeedback);
+					target.addComponent(homepage);
+					target.addComponent(homepageFeedback);
 				}
 				if(!facsimile.isValid()) {
 					facsimile.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
 					facsimileFeedback.setDefaultModel(new ResourceModel("PhoneNumberValidator"));
-					target.add(facsimile);
-					target.add(facsimileFeedback);
+					target.addComponent(facsimile);
+					target.addComponent(facsimileFeedback);
 				}
 				
 				if(!workphone.isValid()) {
 					workphone.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
 					workphoneFeedback.setDefaultModel(new ResourceModel("PhoneNumberValidator"));
-					target.add(workphone);
-					target.add(workphoneFeedback);
+					target.addComponent(workphone);
+					target.addComponent(workphoneFeedback);
 				}
 				if(!homephone.isValid()) {
 					homephone.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
 					homephoneFeedback.setDefaultModel(new ResourceModel("PhoneNumberValidator"));
-					target.add(homephone);
-					target.add(homephoneFeedback);
+					target.addComponent(homephone);
+					target.addComponent(homephoneFeedback);
 				}
 				if(!mobilephone.isValid()) {
 					mobilephone.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
 					mobilephoneFeedback.setDefaultModel(new ResourceModel("PhoneNumberValidator"));
-					target.add(mobilephone);
-					target.add(mobilephoneFeedback);
+					target.addComponent(mobilephone);
+					target.addComponent(mobilephoneFeedback);
 				}
 				if(!facsimile.isValid()) {
 					facsimile.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
 					facsimileFeedback.setDefaultModel(new ResourceModel("PhoneNumberValidator"));
-					target.add(facsimile);
-					target.add(facsimileFeedback);
+					target.addComponent(facsimile);
+					target.addComponent(facsimileFeedback);
 				}
 
 			}
@@ -338,9 +338,9 @@ public class MyContactEdit extends Panel {
 				newPanel.setOutputMarkupId(true);
 				thisPanel.replaceWith(newPanel);
 				if(target != null) {
-					target.add(newPanel);
+					target.addComponent(newPanel);
 					//resize iframe
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
             	
             }

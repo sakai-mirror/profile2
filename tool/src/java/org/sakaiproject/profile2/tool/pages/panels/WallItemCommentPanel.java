@@ -26,7 +26,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.WallItemComment;
-import org.sakaiproject.profile2.tool.components.ProfileImage;
+import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.pages.ViewProfile;
 import org.sakaiproject.profile2.util.ProfileConstants;
 import org.sakaiproject.profile2.util.ProfileUtils;
@@ -59,11 +59,9 @@ public class WallItemCommentPanel extends Panel {
 			}
 		};
 
-		// image		
-		ProfileImage photo = new ProfileImage("wallItemPhoto", new Model<String>(comment.getCreatorUuid()));
-		photo.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-		wallItemPhoto.add(photo);
-		
+		// image
+		wallItemPhoto.add(new ProfileImageRenderer("wallItemPhoto", comment
+				.getCreatorUuid()));
 		add(wallItemPhoto);
 
 		// name and link to profile

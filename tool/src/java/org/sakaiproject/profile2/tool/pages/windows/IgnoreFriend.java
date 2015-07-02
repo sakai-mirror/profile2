@@ -32,7 +32,8 @@ import org.sakaiproject.profile2.logic.ProfilePrivacyLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.ProfilePreferences;
 import org.sakaiproject.profile2.model.ProfilePrivacy;
-import org.sakaiproject.profile2.tool.components.ProfileImage;
+import org.sakaiproject.profile2.tool.components.FocusOnLoadBehaviour;
+import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.models.FriendAction;
 import org.sakaiproject.profile2.util.ProfileConstants;
 import org.sakaiproject.util.FormattedText;
@@ -75,9 +76,7 @@ public class IgnoreFriend extends Panel {
 		ProfilePrivacy privacy = privacyLogic.getPrivacyRecordForUser(userY);
 		
 		//image
-		ProfileImage image = new ProfileImage("image", new Model<String>(userY));
-		image.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-		add(image);
+		add(new ProfileImageRenderer("image", userY, prefs, privacy, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, false));
 		
         //text
 		final Label text = new Label("text", new StringResourceModel("text.friend.ignore", null, new Object[]{ friendName } ));
@@ -104,8 +103,8 @@ public class IgnoreFriend extends Panel {
 					text.setDefaultModel(new StringResourceModel("error.friend.not.pending.ignore", null, new Object[]{ friendName } ));
 					this.setEnabled(false);
 					this.add(new AttributeModifier("class", true, new Model("disabled")));
-					target.add(text);
-					target.add(this);
+					target.addComponent(text);
+					target.addComponent(this);
 					return;
 				}
 				
@@ -122,14 +121,14 @@ public class IgnoreFriend extends Panel {
 					text.setDefaultModel(new StringResourceModel("error.friend.ignore.failed", null, new Object[]{ friendName } ));
 					this.setEnabled(false);
 					this.add(new AttributeModifier("class", true, new Model("disabled")));
-					target.add(text);
-					target.add(this);
+					target.addComponent(text);
+					target.addComponent(this);
 					return;
 				}
 				
             }
 		};
-		//submitButton.add(new FocusOnLoadBehaviour());
+		submitButton.add(new FocusOnLoadBehaviour());
 		submitButton.add(new AttributeModifier("title", true, new StringResourceModel("accessibility.connection.ignore", null, new Object[]{ friendName } )));
 		form.add(submitButton);
 		

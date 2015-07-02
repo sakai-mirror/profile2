@@ -181,9 +181,9 @@ public class MyInfoDisplay extends Panel {
 				newPanel.setOutputMarkupId(true);
 				thisPanel.replaceWith(newPanel);
 				if(target != null) {
-					target.add(newPanel);
+					target.addComponent(newPanel);
 					//resize iframe
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
 			}
 						

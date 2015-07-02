@@ -119,10 +119,10 @@ public class MyStudentEdit extends Panel {
 					newPanel.setOutputMarkupId(true);
 					MyStudentEdit.this.replaceWith(newPanel);
 					if (target != null) {
-						target.add(newPanel);
+						target.addComponent(newPanel);
 						// resize iframe
 						target
-								.appendJavaScript("setMainFrameHeight(window.name);");
+								.appendJavascript("setMainFrameHeight(window.name);");
 					}
 
 				} else {
@@ -134,7 +134,7 @@ public class MyStudentEdit extends Panel {
 							"error.profile.save.academic.failed"));
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model<String>("save-failed-error")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				}
 			}
 		};
@@ -150,9 +150,9 @@ public class MyStudentEdit extends Panel {
 				newPanel.setOutputMarkupId(true);
 				MyStudentEdit.this.replaceWith(newPanel);
 				if(target != null) {
-					target.add(newPanel);
+					target.addComponent(newPanel);
 					//resize iframe
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.appendJavascript("setMainFrameHeight(window.name);");
 					//need a scrollTo action here, to scroll down the page to the section
 				}
             	

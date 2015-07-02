@@ -18,12 +18,14 @@ package org.sakaiproject.profile2.tool;
 import java.util.Locale;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.core.request.mapper.CryptoMapper;
+import org.apache.wicket.Page;
+import org.apache.wicket.Request;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.Response;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
-import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.WebRequestCycle;
+import org.apache.wicket.protocol.http.WebResponse;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.sakaiproject.profile2.tool.pages.MyProfile;
@@ -34,9 +36,8 @@ public class ProfileApplication extends WebApplication {
 	protected void init(){
 		super.init();
 		
-		//Configure for Spring injection
-        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-
+		// Configure general Wicket application settings
+		addComponentInstantiationListener(new SpringComponentInjector(this));
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getMarkupSettings().setStripWicketTags(true);
 		getMarkupSettings().setDefaultBeforeDisabledLink(null);
@@ -47,46 +48,34 @@ public class ProfileApplication extends WebApplication {
 		getApplicationSettings().setAccessDeniedPage(MyProfile.class);
 		
 		// Custom resource loader since our properties are not in the default location
-		getResourceSettings().getStringResourceLoaders().add(new ProfileStringResourceLoader());
-		
-		// Throw RuntimeExceptions so they are caught by the Sakai ErrorReportHandler
-        getRequestCycleListeners().add(new SakaiRequestCycleListener());
-        
-        //encrypt URLs
-        IRequestMapper cryptoMapper = new CryptoMapper(getRootRequestMapper(), this);
-        setRootRequestMapper(cryptoMapper);
-		
+		getResourceSettings().addStringResourceLoader(new ProfileStringResourceLoader());		
 	}
 	
+	// Throw RuntimeExceptions so they are caught by the Sakai ErrorReportHandler
+	@Override
+	public RequestCycle newRequestCycle(Request request, Response response) {
+		return new WebRequestCycle(this, (WebRequest)request, (WebResponse)response) {
+			@Override
+			public Page onRuntimeException(Page page, RuntimeException e) {
+				throw e;
+			}
+		};
+	}
 	
 	//Custom resource loader
 	private static class ProfileStringResourceLoader implements IStringResourceLoader {
 		
 		private ResourceLoader messages = new ResourceLoader("ProfileApplication");
-
-		@Override
-		public String loadStringResource(Class<?> clazz, String key,
-				Locale locale, String style, String variation) {
-			messages.setContextLocale(locale);
-			return messages.getString(key, key);
-		}
-
-		@Override
-		public String loadStringResource(Component component, String key,
-				Locale locale, String style, String variation) {
-			messages.setContextLocale(locale);
-			return messages.getString(key, key);
-		}
-
-	}
-	
-	//custom request cycle listener to throw exceptions up to Sakai's error handler
-	public class SakaiRequestCycleListener extends AbstractRequestCycleListener {
 		
-		@Override
-		public IRequestHandler onException(RequestCycle cycle, Exception ex) {
-            return null;
-        }
+		public String loadStringResource(Component component, String key) {
+			return messages.getString(key, key);
+		}
+
+		public String loadStringResource(Class clazz, String key, Locale locale, String style) {
+			messages.setContextLocale(locale);
+			return messages.getString(key, key);
+		}
+
 	}
 	
 	
@@ -94,8 +83,8 @@ public class ProfileApplication extends WebApplication {
 	}
 	
 	//setup homepage		
-	public Class<MyProfile> getHomePage() {
-		return MyProfile.class;
+	public Class<Dispatcher> getHomePage() {
+		return Dispatcher.class;
 	}
 	
 }

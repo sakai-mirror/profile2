@@ -128,7 +128,7 @@ public class CreateWorksitePanel extends Panel {
 							"error.worksite.no.title"));
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model<String>("alertMessage")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 					return;
 				}
 
@@ -144,7 +144,7 @@ public class CreateWorksitePanel extends Panel {
 							"error.worksite.create.failed"));
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model<String>("alertMessage")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 					return;
 				}
 			}
@@ -175,9 +175,9 @@ public class CreateWorksitePanel extends Panel {
 
 		formFeedback.setVisible(false);
 		
-		target.add(siteNameField);
-		target.appendJavaScript("$('#" + CreateWorksitePanel.this.getMarkupId()
+		target.addComponent(siteNameField);
+		target.appendJavascript("$('#" + CreateWorksitePanel.this.getMarkupId()
 				+ "').slideUp();");
-		target.appendJavaScript("fixWindowVertical();");
+		target.appendJavascript("fixWindowVertical();");
 	}
 }

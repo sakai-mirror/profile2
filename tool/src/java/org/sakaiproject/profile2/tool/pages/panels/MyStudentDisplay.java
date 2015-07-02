@@ -78,9 +78,9 @@ public class MyStudentDisplay extends Panel {
 				newPanel.setOutputMarkupId(true);
 				MyStudentDisplay.this.replaceWith(newPanel);
 				if(target != null) {
-					target.add(newPanel);
+					target.addComponent(newPanel);
 					//resize iframe
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
 				
 			}

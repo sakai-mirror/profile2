@@ -33,10 +33,9 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.behavior.AbstractBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -58,12 +57,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.util.cookies.CookieUtils;
 import org.sakaiproject.profile2.model.Person;
 import org.sakaiproject.profile2.model.ProfileSearchTerm;
 import org.sakaiproject.profile2.tool.components.HashMapChoiceRenderer;
 import org.sakaiproject.profile2.tool.components.IconWithClueTip;
-import org.sakaiproject.profile2.tool.components.ProfileImage;
+import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.components.ProfileStatusRenderer;
 import org.sakaiproject.profile2.tool.models.FriendAction;
 import org.sakaiproject.profile2.tool.models.StringModel;
@@ -101,8 +99,7 @@ public class MySearch extends BasePage {
 		disableLink(searchLink);
 		
 		//check for current search cookie	 
-		CookieUtils utils = new CookieUtils();
-		searchCookie = utils.getCookie(ProfileConstants.SEARCH_COOKIE);
+		searchCookie = getWebRequestCycle().getWebRequest().getCookie(ProfileConstants.SEARCH_COOKIE);
 		
 		//setup model to store the actions in the modal windows
 		final FriendAction friendActionModel = new FriendAction();
@@ -226,8 +223,7 @@ public class MySearch extends BasePage {
 				
 				// clear cookie if present	 
                 if (null != searchCookie) {	 
-                       CookieUtils utils = new CookieUtils();
-                       utils.remove(ProfileConstants.SEARCH_COOKIE);
+                        getWebRequestCycle().getWebResponse().clearCookie(searchCookie);	 
                 }
                 
 				//clear the fields, hide self, then repaint
@@ -238,10 +234,10 @@ public class MySearch extends BasePage {
 				resultsContainer.setVisible(false);
 				clearButton.setVisible(false);
 				
-				target.add(searchField);
-				target.add(numSearchResultsContainer);
-				target.add(resultsContainer);
-				target.add(this);
+				target.addComponent(searchField);
+				target.addComponent(numSearchResultsContainer);
+				target.addComponent(resultsContainer);
+				target.addComponent(this);
 			}				
 		};
 		clearButton.setOutputMarkupPlaceholderTag(true);
@@ -301,10 +297,7 @@ public class MySearch extends BasePage {
 				};
 				
 				//image
-				ProfileImage searchResultPhoto = new ProfileImage("searchResultPhoto", new Model<String>(userUuid));
-				searchResultPhoto.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-				friendItem.add(searchResultPhoto);
-				
+				friendItem.add(new ProfileImageRenderer("searchResultPhoto", person, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, false));
 				item.add(friendItem);
 		    	
 		    	//name and link to profile (if allowed or no link)
@@ -375,7 +368,7 @@ public class MySearch extends BasePage {
 					            		connectionLabel.setDefaultModel(new ResourceModel("text.friend.requested"));
 										add(new AttributeModifier("class", true, new Model<String>("instruction icon connection-request")));
 					            		setEnabled(false);
-					            		target.add(c1);
+					            		target.addComponent(c1);
 					            	}
 					            }
 					        });						
@@ -387,7 +380,7 @@ public class MySearch extends BasePage {
 							//friendActionModel.setUpdateThisComponentOnSuccess(this);
 							
 							connectionWindow.show(target);
-							target.appendJavaScript("fixWindowVertical();"); 
+							target.appendJavascript("fixWindowVertical();"); 
 			            	
 						}
 					};
@@ -613,9 +606,9 @@ public class MySearch extends BasePage {
 				searchHistoryContainer.setVisible(false);
 				clearHistoryButton.setVisible(false);
 				
-				target.add(searchField);
-				target.add(searchHistoryContainer);
-				target.add(this);
+				target.addComponent(searchField);
+				target.addComponent(searchHistoryContainer);
+				target.addComponent(this);
 			}				
 		};
 		clearHistoryButton.setOutputMarkupPlaceholderTag(true);
@@ -767,19 +760,19 @@ public class MySearch extends BasePage {
 		
 		if (null != target) {
 			//repaint components
-			target.add(searchField);
-			target.add(searchTypeRadioGroup);
-			target.add(connectionsCheckBox);
-			target.add(worksiteCheckBox);
-			target.add(worksiteChoice);
-			target.add(clearButton);
-			target.add(numSearchResultsContainer);
+			target.addComponent(searchField);
+			target.addComponent(searchTypeRadioGroup);
+			target.addComponent(connectionsCheckBox);
+			target.addComponent(worksiteCheckBox);
+			target.addComponent(worksiteChoice);
+			target.addComponent(clearButton);
+			target.addComponent(numSearchResultsContainer);
 			clearButton.setVisible(true);
-			target.add(resultsContainer);
+			target.addComponent(resultsContainer);
 			clearHistoryButton.setVisible(true);
 			searchHistoryContainer.setVisible(true);
-			target.add(searchHistoryContainer);
-			target.appendJavaScript("setMainFrameHeight(window.name);");
+			target.addComponent(searchHistoryContainer);
+			target.appendJavascript("setMainFrameHeight(window.name);");
 		}
 	}
 	
@@ -835,19 +828,19 @@ public class MySearch extends BasePage {
 		
 		if (null != target) {
 			//repaint components
-			target.add(searchField);
-			target.add(searchTypeRadioGroup);
-			target.add(connectionsCheckBox);
-			target.add(worksiteCheckBox);
-			target.add(worksiteChoice);
-			target.add(clearButton);
-			target.add(numSearchResultsContainer);
+			target.addComponent(searchField);
+			target.addComponent(searchTypeRadioGroup);
+			target.addComponent(connectionsCheckBox);
+			target.addComponent(worksiteCheckBox);
+			target.addComponent(worksiteChoice);
+			target.addComponent(clearButton);
+			target.addComponent(numSearchResultsContainer);
 			clearButton.setVisible(true);
-			target.add(resultsContainer);
+			target.addComponent(resultsContainer);
 			clearHistoryButton.setVisible(true);
 			searchHistoryContainer.setVisible(true);
-			target.add(searchHistoryContainer);
-			target.appendJavaScript("setMainFrameHeight(window.name);");
+			target.addComponent(searchHistoryContainer);
+			target.appendJavascript("setMainFrameHeight(window.name);");
 		}
 	}
 	
@@ -865,14 +858,12 @@ public class MySearch extends BasePage {
 			searchCookie.getValue().indexOf(ProfileConstants.SEARCH_COOKIE_VALUE_SEARCH_MARKER)));
 	}
 	
-	private void updatePageNumber(long l, String cookieString) {
-		/* TODO update the cookies
+	private void updatePageNumber(int pageNumber, String cookieString) {
 		setSearchCookie(getCookieSearchType(cookieString),
 				getCookieSearchString(cookieString),
-				l,
+				pageNumber,
 				getCookieFilterConnections(cookieString),
 				getCookieFilterWorksite(cookieString));
-		*/
 	}
 	
 	private void setSearchCookie(String searchCookieValuePrefix,
@@ -892,8 +883,7 @@ public class MySearch extends BasePage {
 						+ searchText);
 		// don't persist indefinitely
 		searchCookie.setMaxAge(-1);
-		//getWebRequestCycle().getWebResponse().addCookie(searchCookie);
-		//TODO sort out the cookies
+		getWebRequestCycle().getWebResponse().addCookie(searchCookie);
 	}
 	
 	private String getCookieSearchString(String cookieString) {
@@ -918,7 +908,7 @@ public class MySearch extends BasePage {
 	}
 		         
 	// behaviour so we can set the current search cookie when the navigator page changes	 
-	private class MySearchCookieBehavior extends Behavior {
+	private class MySearchCookieBehavior extends AbstractBehavior {
 
 		private static final long serialVersionUID = 1L;
 
@@ -934,7 +924,6 @@ public class MySearch extends BasePage {
 				updatePageNumber(view.getCurrentPage(), searchCookie.getValue());
 			}
 		}
-
 	}
 		
 }

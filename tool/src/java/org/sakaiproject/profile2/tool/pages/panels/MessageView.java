@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.PageParameters;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -34,7 +35,6 @@ import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.profile2.logic.ProfileMessagingLogic;
 import org.sakaiproject.profile2.logic.ProfilePreferencesLogic;
@@ -45,7 +45,7 @@ import org.sakaiproject.profile2.model.MessageParticipant;
 import org.sakaiproject.profile2.model.MessageThread;
 import org.sakaiproject.profile2.model.ProfilePreferences;
 import org.sakaiproject.profile2.model.ProfilePrivacy;
-import org.sakaiproject.profile2.tool.components.ProfileImage;
+import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.dataproviders.MessagesDataProvider;
 import org.sakaiproject.profile2.tool.models.StringModel;
 import org.sakaiproject.profile2.tool.pages.MyMessages;
@@ -82,7 +82,7 @@ public class MessageView extends Panel {
 		super(id);
 		log.debug("MyMessageView(" + parameters.toString() +")");
 
-		MessageThread thread = messagingLogic.getMessageThread(parameters.get("thread").toString());
+		MessageThread thread = messagingLogic.getMessageThread(parameters.getString("thread"));
 		
 		//check user is a thread participant
 		String currentUserUuid = sakaiProxy.getCurrentUserId();
@@ -184,10 +184,9 @@ public class MessageView extends Panel {
 				};
 				
 				//photo
-				ProfileImage messagePhoto = new ProfileImage("messagePhoto", new Model<String>(messageFromUuid));
-				messagePhoto.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-				photoLink.add(messagePhoto);
-				item.add(photoLink);				
+				photoLink.add(new ProfileImageRenderer("messagePhoto", messageFromUuid, prefs, privacy, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, false));
+				item.add(photoLink);
+				
 				
 				//name link
 				AjaxLink<String> messageFromLink = new AjaxLink<String>("messageFromLink", new Model<String>(messageFromUuid)) {
@@ -262,21 +261,21 @@ public class MessageView extends Panel {
         		if(message != null) {
         			//clear this field
         			replyField.setModelObject(null);
-        			target.add(replyField);
+        			target.addComponent(replyField);
         			
         			//create new item and add it to the list
         			//do we need to register this with the listview?
         			Component item = buildItem(message);
-        			target.prependJavaScript(String.format(
+        			target.prependJavascript(String.format(
                                     "var item=document.createElement('%s');item.id='%s';Wicket.$('%s').appendChild(item);",
                                     "tr", item.getMarkupId(), messageListContainer.getMarkupId()));
-        			target.add(item);
+        			target.addComponent(item);
 
         			//repaint the list of messages in this thread
         			//target.addComponent(messageListContainer);
         			
         			//resize
-    				target.appendJavaScript("setMainFrameHeight(window.name);");
+    				target.appendJavascript("setMainFrameHeight(window.name);");
         		}
         		
             }
@@ -288,7 +287,7 @@ public class MessageView extends Panel {
 					formFeedback.setDefaultModel(new ResourceModel("error.message.required.body"));
 				}
 				formFeedback.add(new AttributeModifier("class", true, new Model<String>("alertMessage")));	
-				target.add(formFeedback);
+				target.addComponent(formFeedback);
 			}
 		};
 		replyForm.add(replyButton);
@@ -316,12 +315,7 @@ public class MessageView extends Panel {
 				setResponsePage(new ViewProfile(getModelObject()));
 			}
 			
-		});
-		
-		//image
-		ProfileImage messagePhoto = new ProfileImage("messagePhoto", new Model<String>(message.getFrom()));
-		messagePhoto.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-		item.add(messagePhoto);
+		}.add(new ProfileImageRenderer("messagePhoto", message.getFrom(), prefs, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, false)));
 		
 		//name link
 		item.add(new AjaxLink<String>("messageFromLink", new Model<String>(message.getFrom())) {

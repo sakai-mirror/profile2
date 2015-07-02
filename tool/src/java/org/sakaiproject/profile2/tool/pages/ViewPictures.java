@@ -73,7 +73,7 @@ public class ViewPictures extends BasePage {
 
 		IDataProvider dataProvider = new GalleryImageDataProvider(userUuid);
 
-		long numImages = dataProvider.size();
+		int numImages = dataProvider.size();
 		
 		gridView = new GridView("rows", dataProvider) {
 

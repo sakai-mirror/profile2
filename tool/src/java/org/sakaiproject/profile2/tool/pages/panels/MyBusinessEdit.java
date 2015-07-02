@@ -42,6 +42,8 @@ import org.sakaiproject.profile2.logic.ProfileWallLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.CompanyProfile;
 import org.sakaiproject.profile2.model.UserProfile;
+import org.sakaiproject.profile2.tool.components.CKEditorConfig;
+import org.sakaiproject.profile2.tool.components.CKEditorTextArea;
 import org.sakaiproject.profile2.util.ProfileConstants;
 
 /**
@@ -112,12 +114,12 @@ public class MyBusinessEdit extends Panel {
 				"businessBiographyContainer");
 		businessBiographyContainer.add(new Label("businessBiographyLabel",
 				new ResourceModel("profile.business.bio")));
-		TextArea businessBiography = new TextArea(
+		CKEditorTextArea businessBiography = new CKEditorTextArea(
 				"businessBiography", new PropertyModel<String>(userProfile,
 						"businessBiography"));
 		businessBiography.setMarkupId("businessbioinput");
 		businessBiography.setOutputMarkupId(true);
-		//businessBiography.setEditorConfig(CKEditorConfig.createCkConfig());
+		businessBiography.setEditorConfig(CKEditorConfig.createCkConfig());
 		businessBiographyContainer.add(businessBiography);
 		form.add(businessBiographyContainer);
 
@@ -135,7 +137,7 @@ public class MyBusinessEdit extends Panel {
 
 		AjaxFallbackButton submitButton = createSaveChangesButton(id,
 				userProfile, form, formFeedback);
-		//submitButton.add(new CKEditorTextArea.CKEditorAjaxSubmitModifier());
+		submitButton.add(new CKEditorTextArea.CKEditorAjaxSubmitModifier());
 		form.add(submitButton);
 
 		AjaxFallbackButton cancelButton = createCancelChangesButton(id,
@@ -166,8 +168,8 @@ public class MyBusinessEdit extends Panel {
 				newPanel.setOutputMarkupId(true);
 				MyBusinessEdit.this.replaceWith(newPanel);
 				if (target != null) {
-					target.add(newPanel);
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.addComponent(newPanel);
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
 
 			}
@@ -201,10 +203,10 @@ public class MyBusinessEdit extends Panel {
 					newPanel.setOutputMarkupId(true);
 					MyBusinessEdit.this.replaceWith(newPanel);
 					if (target != null) {
-						target.add(newPanel);
+						target.addComponent(newPanel);
 						// resize iframe
 						target
-								.appendJavaScript("setMainFrameHeight(window.name);");
+								.appendJavascript("setMainFrameHeight(window.name);");
 					}
 
 				} else {
@@ -212,7 +214,7 @@ public class MyBusinessEdit extends Panel {
 							"error.profile.save.business.failed"));
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model<String>("save-failed-error")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				}
 			}
 		};
@@ -256,8 +258,8 @@ public class MyBusinessEdit extends Panel {
 				MyBusinessEdit.this.replaceWith(newPanel);
 
 				if (target != null) {
-					target.add(newPanel);
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.addComponent(newPanel);
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
 			}
 		};
@@ -287,10 +289,10 @@ public class MyBusinessEdit extends Panel {
 				MyBusinessEdit.this.replaceWith(newPanel);
 
 				if (target != null) {
-					target.add(newPanel);
+					target.addComponent(newPanel);
 					// resize iframe
 					target
-							.prependJavaScript("setMainFrameHeight(window.name);");
+							.prependJavascript("setMainFrameHeight(window.name);");
 				}
 			}
 		};

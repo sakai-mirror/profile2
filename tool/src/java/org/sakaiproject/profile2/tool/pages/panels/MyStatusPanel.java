@@ -18,13 +18,10 @@ package org.sakaiproject.profile2.tool.pages.panels;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.behavior.StringHeaderContributor;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -113,8 +110,8 @@ public class MyStatusPanel extends Panel {
 				if(statusLogic.clearUserStatus(userId)) {
 					status.setVisible(false); //hide status
 					this.setVisible(false); //hide clear link
-					target.add(status);
-					target.add(this);
+					target.addComponent(status);
+					target.addComponent(this);
 				}
 			}
 			
@@ -154,12 +151,19 @@ public class MyStatusPanel extends Panel {
 		statusField.setMarkupId("messageinput");
 		statusField.setOutputMarkupId(true);
         statusField.setOutputMarkupPlaceholderTag(true);
-        statusField.add(new StatusFieldCounterBehaviour());
         form.add(statusField);
         
         //link the status textfield field with the focus/blur function via this dynamic js 
         //also link with counter
-        //add(new StatusFieldCounterBehaviour());
+		StringHeaderContributor statusJavascript = new StringHeaderContributor(
+				"<script type=\"text/javascript\">" +
+					"$(document).ready( function(){" +
+					"autoFill('#" + statusField.getMarkupId() + "', '" + defaultStatus + "');" +
+					"countChars('#" + statusField.getMarkupId() + "');" +
+					"});" +
+				"</script>");
+		add(statusJavascript);
+
         
         
         //submit button
@@ -207,22 +211,22 @@ public class MyStatusPanel extends Panel {
 					clearLink.setVisible(true);
 					
 					if(target != null) {
-						target.add(newStatus);
-						target.add(clearLink);
+						target.addComponent(newStatus);
+						target.addComponent(clearLink);
 						status=newStatus; //update reference
 						
 						//reset the field
-						target.appendJavaScript("autoFill('#" + statusField.getMarkupId() + "', '" + defaultStatus + "');");
+						target.appendJavascript("autoFill('#" + statusField.getMarkupId() + "', '" + defaultStatus + "');");
 						
 						//reset the counter
-						target.appendJavaScript("countChars('#" + statusField.getMarkupId() + "');");
+						target.appendJavascript("countChars('#" + statusField.getMarkupId() + "');");
 
 					}
 					
 				} else {
 					log.error("Couldn't save status for: " + userId);
 					String js = "alert('Failed to save status. If the problem persists, contact your system administrator.');";
-					target.prependJavaScript(js);	
+					target.prependJavascript(js);	
 				}
 				
             }
@@ -241,18 +245,6 @@ public class MyStatusPanel extends Panel {
 		
 		add(statusFormContainer);
 		
-	}
-	
-	public class StatusFieldCounterBehaviour extends Behavior {
-	 		
-	    public void renderHead(Component component, IHeaderResponse response) {
-	    	response.render(StringHeaderItem.forString("<script type=\"text/javascript\">" +
-					"$(document).ready( function(){" +
-					"autoFill('#" + component.getMarkupId() + "', '" + defaultStatus + "');" +
-					"countChars('#" + component.getMarkupId() + "');" +
-					"});" +
-				"</script>"));
-	    }
 	}
 	
 }

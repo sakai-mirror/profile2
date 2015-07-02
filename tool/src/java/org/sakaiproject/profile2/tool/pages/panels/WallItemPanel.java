@@ -31,7 +31,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.WallItem;
 import org.sakaiproject.profile2.model.WallItemComment;
-import org.sakaiproject.profile2.tool.components.ProfileImage;
+import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.models.WallAction;
 import org.sakaiproject.profile2.tool.pages.ViewProfile;
 import org.sakaiproject.profile2.tool.pages.windows.RemoveWallItem;
@@ -88,10 +88,8 @@ public class WallItemPanel extends Panel {
 		};
 
 		// image
-		ProfileImage photo = new ProfileImage("wallItemPhoto", new Model<String>(wallItem.getCreatorUuid()));
-		photo.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-		wallItemPhoto.add(photo);
-		
+		wallItemPhoto.add(new ProfileImageRenderer("wallItemPhoto", wallItem
+				.getCreatorUuid()));
 		add(wallItemPhoto);
 
 		// name and link to profile
@@ -144,7 +142,7 @@ public class WallItemPanel extends Panel {
 				});
 				
 				wallItemActionWindow.show(target);
-				target.appendJavaScript("fixWindowVertical();"); 
+				target.appendJavascript("fixWindowVertical();"); 
 			}
 		};
 
@@ -173,8 +171,8 @@ public class WallItemPanel extends Panel {
 			public void onClick(AjaxRequestTarget target) {
 		
 				postCommentPanel.setVisible(true);
-				target.add(postCommentPanel);
-				target.appendJavaScript("$('#" + postCommentPanel.getMarkupId() + "').slideDown();");
+				target.addComponent(postCommentPanel);
+				target.appendJavascript("$('#" + postCommentPanel.getMarkupId() + "').slideDown();");
 			}
 		};
 

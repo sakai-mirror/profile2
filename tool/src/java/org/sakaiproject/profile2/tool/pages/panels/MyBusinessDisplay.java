@@ -147,9 +147,9 @@ public class MyBusinessDisplay extends Panel {
 				newPanel.setOutputMarkupId(true);
 				MyBusinessDisplay.this.replaceWith(newPanel);
 				if (target != null) {
-					target.add(newPanel);
+					target.addComponent(newPanel);
 					// resize iframe
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
 
 			}

@@ -38,6 +38,7 @@ import org.sakaiproject.profile2.logic.ProfileWallLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.WallItem;
 import org.sakaiproject.profile2.model.WallItemComment;
+import org.sakaiproject.profile2.tool.components.FocusOnLoadBehaviour;
 
 /**
  * Panel for commenting on a wall item.
@@ -90,7 +91,7 @@ public class WallItemPostCommentPanel extends Panel {
 							"error.wall.comment.empty"));
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model<String>("alertMessage")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 					return;
 				}
 				
@@ -110,7 +111,7 @@ public class WallItemPostCommentPanel extends Panel {
 							"error.wall.comment.failed"));
 					formFeedback.add(new AttributeModifier("class", true,
 							new Model<String>("alertMessage")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 					return;
 				}
 								
@@ -119,12 +120,12 @@ public class WallItemPostCommentPanel extends Panel {
 				newPanel.setOutputMarkupId(true);
 				wallItemPanel.replaceWith(newPanel);
 				if (null != target) {
-					target.add(newPanel);
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.addComponent(newPanel);
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
 			}
 		};
-		//submitButton.add(new FocusOnLoadBehaviour());
+		submitButton.add(new FocusOnLoadBehaviour());
 		
 		AttributeModifier accessibilityLabel = new AttributeModifier(
 					"title", true, new StringResourceModel("accessibility.wall.comment", null, new Object[]{ sakaiProxy.getUserDisplayName(wallItem.getCreatorUuid()) } ));
@@ -138,7 +139,7 @@ public class WallItemPostCommentPanel extends Panel {
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				commentTextArea.clearInput();
 				formFeedback.setVisible(false);
-				target.appendJavaScript("$('#" + WallItemPostCommentPanel.this.getMarkupId() + "').slideUp();");
+				target.appendJavascript("$('#" + WallItemPostCommentPanel.this.getMarkupId() + "').slideUp();");
             }
         };
         

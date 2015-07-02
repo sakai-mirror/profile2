@@ -225,15 +225,15 @@ public class MySocialNetworkingEdit extends Panel {
 					newPanel.setOutputMarkupId(true);
 					MySocialNetworkingEdit.this.replaceWith(newPanel);
 					if (target != null) {
-						target.add(newPanel);
+						target.addComponent(newPanel);
 						// resize iframe
-						target.appendJavaScript("setMainFrameHeight(window.name);");
+						target.appendJavascript("setMainFrameHeight(window.name);");
 					}
 
 				} else {
 					formFeedback.setDefaultModel(new ResourceModel("error.profile.save.business.failed"));
 					formFeedback.add(new AttributeModifier("class", true,new Model<String>("save-failed-error")));
-					target.add(formFeedback);
+					target.addComponent(formFeedback);
 				}
 			}
 			
@@ -244,23 +244,23 @@ public class MySocialNetworkingEdit extends Panel {
 				//check which item didn't validate and update the class and feedback model for that component
 				if(!facebookUrl.isValid()) {
 					facebookUrl.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
-					target.add(facebookUrl);
-					target.add(facebookUrlFeedback);
+					target.addComponent(facebookUrl);
+					target.addComponent(facebookUrlFeedback);
 				}
 				if(!linkedinUrl.isValid()) {
 					linkedinUrl.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
-					target.add(linkedinUrl);
-					target.add(linkedinUrlFeedback);
+					target.addComponent(linkedinUrl);
+					target.addComponent(linkedinUrlFeedback);
 				}
 				if(!myspaceUrl.isValid()) {
 					myspaceUrl.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
-					target.add(myspaceUrl);
-					target.add(myspaceUrlFeedback);
+					target.addComponent(myspaceUrl);
+					target.addComponent(myspaceUrlFeedback);
 				}
 				if(!twitterUrl.isValid()) {
 					twitterUrl.add(new AttributeAppender("class", new Model<String>("invalid"), " "));
-					target.add(twitterUrl);
-					target.add(twitterUrlFeedback);
+					target.addComponent(twitterUrl);
+					target.addComponent(twitterUrlFeedback);
 				}
 			}
 			
@@ -279,8 +279,8 @@ public class MySocialNetworkingEdit extends Panel {
 				newPanel.setOutputMarkupId(true);
 				MySocialNetworkingEdit.this.replaceWith(newPanel);
 				if (target != null) {
-					target.add(newPanel);
-					target.appendJavaScript("setMainFrameHeight(window.name);");
+					target.addComponent(newPanel);
+					target.appendJavascript("setMainFrameHeight(window.name);");
 				}
 
 			}

@@ -21,7 +21,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.GridView;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -30,7 +29,7 @@ import org.sakaiproject.profile2.logic.ProfilePreferencesLogic;
 import org.sakaiproject.profile2.logic.ProfilePrivacyLogic;
 import org.sakaiproject.profile2.logic.SakaiProxy;
 import org.sakaiproject.profile2.model.Person;
-import org.sakaiproject.profile2.tool.components.ProfileImage;
+import org.sakaiproject.profile2.tool.components.ProfileImageRenderer;
 import org.sakaiproject.profile2.tool.dataproviders.FriendsFeedDataProvider;
 import org.sakaiproject.profile2.tool.pages.MyFriends;
 import org.sakaiproject.profile2.tool.pages.MyProfile;
@@ -100,9 +99,7 @@ public class FriendsFeed extends Panel {
 					public void onClick() {}
 				};
 				
-				ProfileImage friendPhoto = new ProfileImage("friendPhoto", new Model<String>(null));
-				friendPhoto.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-				friendItem.add(friendPhoto);
+				friendItem.add(new ProfileImageRenderer("friendPhoto", null, null, null, ProfileConstants.PROFILE_IMAGE_THUMBNAIL, true));
 
 				friendItem.add(new Label("friendName","empty"));
 				item.add(friendItem);
@@ -141,9 +138,7 @@ public class FriendsFeed extends Panel {
 				};
 				
 				/* IMAGE */
-				ProfileImage friendPhoto = new ProfileImage("friendPhoto", new Model<String>(friendId));
-				friendPhoto.setSize(ProfileConstants.PROFILE_IMAGE_THUMBNAIL);
-				friendItem.add(friendPhoto);
+				friendItem.add(new ProfileImageRenderer("friendPhoto", friendId, person.getPreferences(), person.getPrivacy(), ProfileConstants.PROFILE_IMAGE_THUMBNAIL, true));
 				
 				//name (will be linked also)
 		    	Label friendLinkLabel = new Label("friendName", displayName);
